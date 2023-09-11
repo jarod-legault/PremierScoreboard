@@ -3,10 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const keys = {
   HOME_SCORE: 'homeScore',
+  VISITOR_SCORE: 'visitorScore',
 } as const;
 
 export function usePersistentState() {
   const [homeScore, setHomeScore] = useState(0);
+  const [visitorScore, setVisitorScore] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -22,6 +24,7 @@ export function usePersistentState() {
 
     const initialize = async () => {
       setHomeScore(await getData(keys.HOME_SCORE, homeScore));
+      setVisitorScore(await getData(keys.VISITOR_SCORE, visitorScore));
 
       setIsInitialized(true);
     };
@@ -44,5 +47,16 @@ export function usePersistentState() {
     storeData(keys.HOME_SCORE, newHomeScore);
   };
 
-  return {homeScore, isInitialized, setHomeScore: updateHomeScore};
+  const updateVisitorScore = async (newVisitorScore: number) => {
+    setVisitorScore(newVisitorScore);
+    storeData(keys.VISITOR_SCORE, newVisitorScore);
+  };
+
+  return {
+    homeScore,
+    isInitialized,
+    setHomeScore: updateHomeScore,
+    visitorScore,
+    setVisitorScore: updateVisitorScore,
+  };
 }

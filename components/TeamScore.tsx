@@ -1,12 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 type Props = {
-  containerStyle?: object;
-  name: string;
-  fontColor?: string;
-  score: number;
   backgroundColor?: string;
+  containerStyle?: object;
+  fontColor?: string;
+  name: string;
+  onDecrement: () => void;
+  onIncrement: () => void;
+  score: number;
 };
 
 export function TeamScore(props: Props) {
@@ -26,6 +28,10 @@ export function TeamScore(props: Props) {
         <Text style={{...styles.score, color: props.fontColor}}>
           {props.score}
         </Text>
+      </View>
+      <View style={styles.touchableContainer}>
+        <Pressable onPress={props.onIncrement} style={styles.touchableHalf} />
+        <Pressable onPress={props.onDecrement} style={styles.touchableHalf} />
       </View>
     </View>
   );
@@ -53,5 +59,16 @@ const styles = StyleSheet.create({
   scoreContainer: {
     flex: 1,
     justifyContent: 'center',
+  },
+  touchableContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  touchableHalf: {
+    height: '50%',
+    width: '100%',
   },
 });
