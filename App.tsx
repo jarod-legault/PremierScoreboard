@@ -1,15 +1,17 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Scoreboard} from './components/Scoreboard';
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView>
+    <View style={styles.container}>
       <Scoreboard />
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {flex: 1},
+});
 
 export default App;
