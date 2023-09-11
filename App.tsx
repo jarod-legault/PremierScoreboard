@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Scoreboard} from './components/Scoreboard';
 
-function App(): JSX.Element {
+function App(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <Scoreboard />
