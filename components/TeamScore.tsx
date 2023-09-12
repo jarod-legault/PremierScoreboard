@@ -2,57 +2,84 @@ import React, {useEffect, useRef} from 'react';
 import {
   Animated,
   Easing,
-  Pressable,
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   View,
+  ViewProps,
 } from 'react-native';
 
-type Props = {
+export type Measurements = {
+  width: number;
+  height: number;
+  pageX: number;
+  pageY: number;
+};
+
+interface Props extends ViewProps {
   backgroundColor?: string;
   containerStyle?: object;
   fontColor?: string;
   name: string;
-  onDecrement: () => void;
-  onIncrement: () => void;
+  onNameMeasure: (measurements: Measurements) => void;
+  onScoreLayout?: (event: LayoutChangeEvent) => void;
   score: number;
   translateX: number;
-};
+}
 
 export function TeamScore(props: Props) {
-  const translateX = useRef(new Animated.Value(props.translateX)).current;
+  const {
+    backgroundColor,
+    containerStyle,
+    fontColor,
+    name,
+    onNameMeasure,
+    onScoreLayout,
+    score,
+    translateX: translateXProp,
+    ...restOfProps
+  } = props;
+
+  const nameRef = useRef<Text>(null);
+  const translateX = useRef(new Animated.Value(translateXProp)).current;
+
+  const onNameLayout = () => {
+    if (nameRef.current) {
+      nameRef.current.measure((x, y, width, height, pageX, pageY) => {
+        onNameMeasure({width, height, pageX, pageY});
+      });
+    }
+  };
 
   useEffect(() => {
     Animated.timing(translateX, {
-      toValue: props.translateX,
+      toValue: translateXProp,
       duration: 200,
       easing: Easing.ease,
       useNativeDriver: true,
-    }).start();
+    }).start(onNameLayout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.translateX]);
+  }, [translateXProp]);
 
   return (
     <Animated.View
+      {...restOfProps}
       style={{
         ...styles.container,
-        ...props.containerStyle,
-        backgroundColor: props.backgroundColor,
+        ...containerStyle,
+        backgroundColor,
         transform: [{translateX}],
       }}>
       <View style={styles.nameContainer}>
-        <Text style={{...styles.name, color: props.fontColor}}>
-          {props.name}
+        <Text
+          ref={nameRef}
+          style={{...styles.name, color: fontColor}}
+          onLayout={onNameLayout}>
+          {name}
         </Text>
       </View>
-      <View style={styles.scoreContainer}>
-        <Text style={{...styles.score, color: props.fontColor}}>
-          {props.score}
-        </Text>
-      </View>
-      <View style={styles.touchableContainer}>
-        <Pressable onPress={props.onIncrement} style={styles.touchableHalf} />
-        <Pressable onPress={props.onDecrement} style={styles.touchableHalf} />
+      <View style={styles.scoreContainer} onLayout={onScoreLayout}>
+        <Text style={{...styles.score, color: fontColor}}>{score}</Text>
       </View>
     </Animated.View>
   );
@@ -70,7 +97,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   nameContainer: {
-    paddingTop: 5,
+    marginVertical: 10,
   },
   score: {
     fontSize: 270,
@@ -80,16 +107,5 @@ const styles = StyleSheet.create({
   scoreContainer: {
     flex: 1,
     justifyContent: 'center',
-  },
-  touchableContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  touchableHalf: {
-    height: '50%',
-    width: '100%',
   },
 });
