@@ -1,5 +1,12 @@
-import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 type Props = {
   backgroundColor?: string;
@@ -9,15 +16,29 @@ type Props = {
   onDecrement: () => void;
   onIncrement: () => void;
   score: number;
+  translateX: number;
 };
 
 export function TeamScore(props: Props) {
+  const translateX = useRef(new Animated.Value(props.translateX)).current;
+
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: props.translateX,
+      duration: 200,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.translateX]);
+
   return (
-    <View
+    <Animated.View
       style={{
         ...styles.container,
         ...props.containerStyle,
         backgroundColor: props.backgroundColor,
+        transform: [{translateX}],
       }}>
       <View style={styles.nameContainer}>
         <Text style={{...styles.name, color: props.fontColor}}>
@@ -33,7 +54,7 @@ export function TeamScore(props: Props) {
         <Pressable onPress={props.onIncrement} style={styles.touchableHalf} />
         <Pressable onPress={props.onDecrement} style={styles.touchableHalf} />
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

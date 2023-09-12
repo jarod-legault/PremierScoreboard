@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {usePersistentState} from '../hooks/usePersistentState';
 import {TeamScore} from './TeamScore';
 import {IconButton} from 'react-native-paper';
@@ -23,6 +23,8 @@ export function Scoreboard() {
     isInitialized,
   } = usePersistentState();
 
+  const {width} = useWindowDimensions();
+
   const decrementHomeScore = () => {
     const newScore = homeScore - 1;
     setHomeScore(newScore);
@@ -43,34 +45,31 @@ export function Scoreboard() {
     setVisitorScore(newScore);
   };
 
-  const homeNameAndScore = () => (
-    <TeamScore
-      backgroundColor="black"
-      fontColor="gold"
-      onDecrement={decrementHomeScore}
-      onIncrement={incrementHomeScore}
-      name="Lions"
-      score={homeScore}
-    />
-  );
-
-  const visitorNameAndScore = () => (
-    <TeamScore
-      backgroundColor="blue"
-      fontColor="red"
-      onDecrement={decrementVisitorScore}
-      onIncrement={incrementVisitorScore}
-      name="Tigers"
-      score={visitorScore}
-    />
-  );
+  const homeTranslateX = homeIsOnLeft ? 0 : width / 2;
+  const visitorTranslateX = homeIsOnLeft ? 0 : width / -2;
 
   if (!isInitialized) return null;
 
   return (
     <View style={styles.container}>
-      {homeIsOnLeft ? homeNameAndScore() : visitorNameAndScore()}
-      {homeIsOnLeft ? visitorNameAndScore() : homeNameAndScore()}
+      <TeamScore
+        backgroundColor="black"
+        fontColor="gold"
+        onDecrement={decrementHomeScore}
+        onIncrement={incrementHomeScore}
+        name="Lions"
+        score={homeScore}
+        translateX={homeTranslateX}
+      />
+      <TeamScore
+        backgroundColor="blue"
+        fontColor="red"
+        onDecrement={decrementVisitorScore}
+        onIncrement={incrementVisitorScore}
+        name="Tigers"
+        score={visitorScore}
+        translateX={visitorTranslateX}
+      />
       <View style={styles.swapIconContainer}>
         <IconButton
           icon="swap-horizontal"
