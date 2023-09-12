@@ -2,10 +2,21 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {usePersistentState} from '../hooks/usePersistentState';
 import {TeamScore} from './TeamScore';
+import {IconButton} from 'react-native-paper';
+
+// HomeMatchCount
+// HomeFontColor
+// HomeBackgroundColor
+// VisitorName
+// VisitorMatchCount
+// VisitorFontColor
+// VisitorBackgroundColor
 
 export function Scoreboard() {
   const {
+    homeIsOnLeft,
     homeScore,
+    setHomeIsOnLeft,
     setHomeScore,
     setVisitorScore,
     visitorScore,
@@ -32,26 +43,42 @@ export function Scoreboard() {
     setVisitorScore(newScore);
   };
 
+  const homeNameAndScore = () => (
+    <TeamScore
+      backgroundColor="black"
+      fontColor="gold"
+      onDecrement={decrementHomeScore}
+      onIncrement={incrementHomeScore}
+      name="Lions"
+      score={homeScore}
+    />
+  );
+
+  const visitorNameAndScore = () => (
+    <TeamScore
+      backgroundColor="blue"
+      fontColor="red"
+      onDecrement={decrementVisitorScore}
+      onIncrement={incrementVisitorScore}
+      name="Tigers"
+      score={visitorScore}
+    />
+  );
+
   if (!isInitialized) return null;
 
   return (
     <View style={styles.container}>
-      <TeamScore
-        backgroundColor="black"
-        fontColor="gold"
-        onDecrement={decrementHomeScore}
-        onIncrement={incrementHomeScore}
-        name="Lions"
-        score={homeScore}
-      />
-      <TeamScore
-        backgroundColor="blue"
-        fontColor="red"
-        onDecrement={decrementVisitorScore}
-        onIncrement={incrementVisitorScore}
-        name="Tigers"
-        score={visitorScore}
-      />
+      {homeIsOnLeft ? homeNameAndScore() : visitorNameAndScore()}
+      {homeIsOnLeft ? visitorNameAndScore() : homeNameAndScore()}
+      <View style={styles.swapIconContainer}>
+        <IconButton
+          icon="swap-horizontal"
+          iconColor="black"
+          size={20}
+          onPress={() => setHomeIsOnLeft(!homeIsOnLeft)}
+        />
+      </View>
     </View>
   );
 }
@@ -60,5 +87,14 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     flexDirection: 'row',
+  },
+  swapIconContainer: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 10,
+    left: 330,
   },
 });

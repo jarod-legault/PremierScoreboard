@@ -1,12 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Scoreboard} from './components/Scoreboard';
+import {PaperProvider} from 'react-native-paper';
 
 function App(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <Scoreboard />
-    </View>
+    <PaperProvider>
+      <View style={styles.container}>
+        <Scoreboard />
+      </View>
+    </PaperProvider>
   );
 }
 
