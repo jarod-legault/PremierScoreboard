@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   GestureResponderEvent,
   Pressable,
@@ -6,44 +6,31 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {usePersistentState} from '../hooks/usePersistentState';
+import {useTeamsContext} from '../contexts/TeamsContext';
+import {SettingsModal} from './SettingsModal';
 import {Measurements, TeamScore} from './TeamScore';
-
-const directions = {
-  UP: 'up',
-  DOWN: 'down',
-  HORIZONTAL: 'horizontal',
-} as const;
 
 const MINIMUM_SWIPE_LENGTH = 50;
 const CENTER_WIDTH = 50;
 
-type PressInfo = {
-  horizontalMidpoint: number;
-  verticalMidpoint: number;
-  width: number;
-  height: number;
-  direction: typeof directions;
-};
-
-// HomeMatchCount
-// HomeFontColor
-// HomeBackgroundColor
-// VisitorName
-// VisitorMatchCount
-// VisitorFontColor
-// VisitorBackgroundColor
+// GestureContext
 
 export function Scoreboard() {
   const {
     homeIsOnLeft,
+    homeName,
     homeScore,
     setHomeIsOnLeft,
+    setHomeName,
     setHomeScore,
+    setVisitorName,
     setVisitorScore,
+    visitorName,
     visitorScore,
     isInitialized,
-  } = usePersistentState();
+  } = useTeamsContext();
+
+  const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const startXRef = useRef(0);
   const startYRef = useRef(0);
@@ -112,6 +99,7 @@ export function Scoreboard() {
     if (touchInfo.isTap) {
       if (touchInfo.startsWithinTeamName) {
         console.log('Tapped team name. Open settings modal.');
+        setModalIsVisible(true);
       } else if (!touchInfo.startsNearCenterLine) {
         if (touchInfo.staysOnTop && touchInfo.staysOnLeft) {
           homeIsOnLeft ? incrementHomeScore() : incrementVisitorScore();
@@ -212,7 +200,7 @@ export function Scoreboard() {
       <TeamScore
         backgroundColor="black"
         fontColor="gold"
-        name="Lions"
+        name={homeName}
         onNameMeasure={handleHomeNameMeasurement}
         score={homeScore}
         translateX={homeTranslateX}
@@ -221,15 +209,24 @@ export function Scoreboard() {
         backgroundColor="blue"
         fontColor="red"
         onNameMeasure={handleVisitorNameMeasurement}
-        name="Tigers"
+        name={visitorName}
         score={visitorScore}
         translateX={visitorTranslateX}
       />
       <Pressable
         style={styles.pressable}
-        onLayout={handlePressableLayout}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
+      />
+      <SettingsModal
+        visible={modalIsVisible}
+        homeName={homeName}
+        homeIsOnLeft={homeIsOnLeft}
+        onChangeHomeName={setHomeName}
+        visitorName={visitorName}
+        onChangeVisitorName={setVisitorName}
+        onCloseButtonPress={() => setModalIsVisible(false)}
+        onRequestClose={() => setModalIsVisible(false)}
       />
     </View>
   );
@@ -237,7 +234,7 @@ export function Scoreboard() {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    flex: 1,
     flexDirection: 'row',
   },
   pressable: {

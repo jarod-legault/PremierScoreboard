@@ -1,20 +1,16 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {Scoreboard} from './components/Scoreboard';
 import {PaperProvider} from 'react-native-paper';
+import {TeamsProvider} from './contexts/TeamsContext';
 
 function App(): React.JSX.Element {
   return (
     <PaperProvider>
-      <View style={styles.container}>
+      <TeamsProvider>
         <Scoreboard />
-      </View>
+      </TeamsProvider>
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-});
 
 export default App;
