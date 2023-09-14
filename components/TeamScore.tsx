@@ -1,13 +1,15 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
   Animated,
   Easing,
-  LayoutChangeEvent,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
   ViewProps,
 } from 'react-native';
+import {useGestureContext} from '../contexts/GestureContext';
+import {useTeamsContext} from '../contexts/TeamsContext';
 
 export type Measurements = {
   width: number;
@@ -20,66 +22,75 @@ interface Props extends ViewProps {
   backgroundColor?: string;
   containerStyle?: object;
   fontColor?: string;
+  isHome: boolean;
   name: string;
-  onNameMeasure: (measurements: Measurements) => void;
-  onScoreLayout?: (event: LayoutChangeEvent) => void;
   score: number;
-  translateX: number;
 }
 
 export function TeamScore(props: Props) {
-  const {
-    backgroundColor,
-    containerStyle,
-    fontColor,
-    name,
-    onNameMeasure,
-    onScoreLayout,
-    score,
-    translateX: translateXProp,
-    ...restOfProps
-  } = props;
+  const {homeIsOnLeft} = useTeamsContext();
 
   const nameRef = useRef<Text>(null);
-  const translateX = useRef(new Animated.Value(translateXProp)).current;
+
+  const {setHomeNameCoordinates, setVisitorNameCoordinates} =
+    useGestureContext();
+
+  const handleNameMeasurement = (measurements: Measurements) => {
+    const coordinates = {
+      x1: measurements.pageX,
+      x2: measurements.pageX + measurements.width,
+      y1: measurements.pageY,
+      y2: measurements.pageY + measurements.height,
+    };
+
+    props.isHome
+      ? setHomeNameCoordinates(coordinates)
+      : setVisitorNameCoordinates(coordinates);
+  };
 
   const onNameLayout = () => {
     if (nameRef.current) {
       nameRef.current.measure((x, y, width, height, pageX, pageY) => {
-        onNameMeasure({width, height, pageX, pageY});
+        handleNameMeasurement({width, height, pageX, pageY});
       });
     }
   };
 
-  useEffect(() => {
-    Animated.timing(translateX, {
-      toValue: translateXProp,
-      duration: 200,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(onNameLayout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [translateXProp]);
+  const {width: screenWidth} = useWindowDimensions();
+  let newTranslateX: number;
+  if (props.isHome) {
+    newTranslateX = homeIsOnLeft ? 0 : screenWidth / 2;
+  } else {
+    newTranslateX = homeIsOnLeft ? 0 : screenWidth / -2;
+  }
+  const translateX = useRef(new Animated.Value(newTranslateX)).current;
+
+  Animated.timing(translateX, {
+    toValue: newTranslateX,
+    duration: 200,
+    easing: Easing.ease,
+    useNativeDriver: true,
+  }).start(onNameLayout);
 
   return (
     <Animated.View
-      {...restOfProps}
       style={{
         ...styles.container,
-        ...containerStyle,
-        backgroundColor,
+        backgroundColor: props.backgroundColor,
         transform: [{translateX}],
       }}>
       <View style={styles.nameContainer}>
         <Text
           ref={nameRef}
-          style={{...styles.name, color: fontColor}}
+          style={{...styles.name, color: props.fontColor}}
           onLayout={onNameLayout}>
-          {name}
+          {props.name}
         </Text>
       </View>
-      <View style={styles.scoreContainer} onLayout={onScoreLayout}>
-        <Text style={{...styles.score, color: fontColor}}>{score}</Text>
+      <View style={styles.scoreContainer}>
+        <Text style={{...styles.score, color: props.fontColor}}>
+          {props.score}
+        </Text>
       </View>
     </Animated.View>
   );

@@ -8,8 +8,12 @@ type Value = {
   homeIsOnLeft: boolean;
   setHomeIsOnLeft: (newValue: boolean) => void;
   homeName: string;
+  decrementHomeScore: () => void;
+  incrementHomeScore: () => void;
   setHomeName: (newName: string) => void;
   homeScore: number;
+  decrementVisitorScore: () => void;
+  incrementVisitorScore: () => void;
   setHomeScore: (newScore: number) => void;
   visitorName: string;
   setVisitorName: (newName: string) => void;
@@ -32,6 +36,26 @@ function TeamsProvider({children}: TeamsProviderProps) {
   const [visitorScore, setVisitorScore, visitorScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.VISITOR_SCORE);
 
+  const decrementHomeScore = () => {
+    const prevScore = homeScore;
+    setHomeScore(prevScore - 1);
+  };
+
+  const incrementHomeScore = () => {
+    const prevScore = homeScore;
+    setHomeScore(prevScore + 1);
+  };
+
+  const decrementVisitorScore = () => {
+    const prevScore = visitorScore;
+    setVisitorScore(prevScore - 1);
+  };
+
+  const incrementVisitorScore = () => {
+    const prevScore = visitorScore;
+    setVisitorScore(prevScore + 1);
+  };
+
   const [isInitialized, setIsInitialized] = useState(false);
 
   const value: Value = {
@@ -40,10 +64,14 @@ function TeamsProvider({children}: TeamsProviderProps) {
     homeName,
     setHomeName,
     homeScore,
+    decrementHomeScore,
+    incrementHomeScore,
     setHomeScore,
     visitorName,
     setVisitorName,
     visitorScore,
+    decrementVisitorScore,
+    incrementVisitorScore,
     setVisitorScore,
     isInitialized,
   };
