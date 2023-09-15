@@ -84,6 +84,7 @@ export function SettingsModal(props: Props) {
       {...restOfProps}
       style={styles.modal}
       transparent
+      statusBarTranslucent
       supportedOrientations={['landscape']}>
       <View style={styles.background}>
         <View style={styles.settingsContainer}>

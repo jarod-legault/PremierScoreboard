@@ -10,7 +10,7 @@ function App(): React.JSX.Element {
     <PaperProvider>
       <TeamsProvider>
         <GestureProvider>
-          <StatusBar hidden />
+          <StatusBar hidden translucent />
           <Scoreboard />
         </GestureProvider>
       </TeamsProvider>
