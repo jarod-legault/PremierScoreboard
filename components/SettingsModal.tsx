@@ -4,6 +4,7 @@ import {Button, IconButton, TextInput} from 'react-native-paper';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
+import {Confirmation} from './Confirmation';
 
 interface Props extends ModalProps {
   onRequestCloseModal: () => void;
@@ -15,6 +16,8 @@ export function SettingsModal(props: Props) {
 
   const [colorPickerIsVisible, setColorPickerIsVisible] = useState(false);
   const [currentColor, setCurrentColor] = useState('white');
+  const [resetConfirmationIsVisible, setResetConfirmationIsVisible] =
+    useState(false);
 
   const {
     homeIsOnLeft,
@@ -24,12 +27,14 @@ export function SettingsModal(props: Props) {
     setHomeBackgroundColor,
     homeTextColor,
     setHomeTextColor,
+    setHomeScore,
     visitorName,
     setVisitorName,
     visitorBackgroundColor,
     setVisitorBackgroundColor,
     visitorTextColor,
     setVisitorTextColor,
+    setVisitorScore,
   } = useTeamsContext();
 
   const setColorRef = useRef(setHomeBackgroundColor);
@@ -66,6 +71,12 @@ export function SettingsModal(props: Props) {
     console.log('color selected: ', newColor);
     setColorPickerIsVisible(false);
     setColorRef.current(newColor);
+  };
+
+  const resetScores = () => {
+    setHomeScore(0);
+    setVisitorScore(0);
+    setResetConfirmationIsVisible(false);
   };
 
   return (
@@ -144,11 +155,23 @@ export function SettingsModal(props: Props) {
             </View>
           </View>
           <View style={styles.bottomContainer}>
-            <Button mode="elevated" onPress={() => console.log('reset scores')}>
+            <Button
+              mode="elevated"
+              onPress={() => setResetConfirmationIsVisible(true)}>
               Reset scores
             </Button>
           </View>
         </View>
+        {resetConfirmationIsVisible && (
+          <Confirmation
+            style={styles.resetConfirmation}
+            title="Reset scores?"
+            onRequestClose={() => setResetConfirmationIsVisible(false)}
+            onConfirm={resetScores}
+            confirmText="Reset"
+            cancelText="Cancel"
+          />
+        )}
         {colorPickerIsVisible && (
           <ColorPicker
             onColorPress={handleColorPress}
@@ -188,6 +211,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   colorPicker: {
+    position: 'absolute',
+  },
+  resetConfirmation: {
     position: 'absolute',
   },
   teamContainer: {
