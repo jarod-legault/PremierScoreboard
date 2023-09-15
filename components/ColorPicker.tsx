@@ -1,5 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
+import {Surface} from 'react-native-paper';
 
 const MIN_COLOR_WIDTH = 34;
 
@@ -105,31 +106,42 @@ export function ColorPicker(props: Props) {
   const {currentColor, style, ...restOfProps} = props;
 
   return (
-    <View {...restOfProps} style={[style, styles.container]}>
-      {allColors.map((colorRow, i) => {
-        let translateX = i % 2 !== 0 ? MIN_COLOR_WIDTH / 2 : 0;
-        let translateY = (i * MIN_COLOR_WIDTH) / -9;
-        return (
-          <View
-            style={[styles.colorRow, {transform: [{translateX}, {translateY}]}]}
-            key={colorRow[0]}>
-            {colorRow.map(color => (
-              <Pressable
+    <View style={style}>
+      <Surface style={styles.containerSurface} elevation={5}>
+        <View {...restOfProps} style={styles.container}>
+          {allColors.map((colorRow, i) => {
+            let translateX = i % 2 !== 0 ? MIN_COLOR_WIDTH / 2 : 0;
+            let translateY = (i * MIN_COLOR_WIDTH) / -9;
+            return (
+              <View
                 style={[
-                  styles.colorContainer,
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  {
-                    backgroundColor: color,
-                    borderWidth: currentColor === color ? 4 : 1,
-                  },
+                  styles.colorRow,
+                  {transform: [{translateX}, {translateY}]},
                 ]}
-                key={color}
-                onPress={() => props.onColorPress(color)}
-              />
-            ))}
-          </View>
-        );
-      })}
+                key={colorRow[0]}>
+                {colorRow.map(color => (
+                  <Surface
+                    key={color}
+                    style={styles.colorSurface}
+                    elevation={2}>
+                    <Pressable
+                      style={[
+                        styles.colorContainer,
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        {
+                          backgroundColor: color,
+                          borderWidth: currentColor === color ? 4 : 0,
+                        },
+                      ]}
+                      onPress={() => props.onColorPress(color)}
+                    />
+                  </Surface>
+                ))}
+              </View>
+            );
+          })}
+        </View>
+      </Surface>
     </View>
   );
 }
@@ -141,16 +153,22 @@ const styles = StyleSheet.create({
   colorContainer: {
     borderRadius: MIN_COLOR_WIDTH / 2,
     aspectRatio: 1,
+  },
+  colorSurface: {
+    aspectRatio: 1,
     minWidth: MIN_COLOR_WIDTH,
+    borderRadius: MIN_COLOR_WIDTH / 2,
     margin: 2,
   },
   container: {
     alignSelf: 'center',
     backgroundColor: 'white',
-    borderWidth: 1,
     borderRadius: 5,
     padding: 20,
     paddingRight: MIN_COLOR_WIDTH,
     paddingBottom: 0,
+  },
+  containerSurface: {
+    borderRadius: 5,
   },
 });
