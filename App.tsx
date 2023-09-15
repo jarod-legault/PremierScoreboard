@@ -1,4 +1,5 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {Scoreboard} from './components/Scoreboard';
 import {PaperProvider} from 'react-native-paper';
 import {TeamsProvider} from './contexts/TeamsContext';
@@ -9,6 +10,7 @@ function App(): React.JSX.Element {
     <PaperProvider>
       <TeamsProvider>
         <GestureProvider>
+          <StatusBar hidden />
           <Scoreboard />
         </GestureProvider>
       </TeamsProvider>
