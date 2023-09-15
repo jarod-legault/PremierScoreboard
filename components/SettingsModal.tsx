@@ -14,6 +14,7 @@ export function SettingsModal(props: Props) {
   const {onRequestCloseModal, ...restOfProps} = props;
 
   const [colorPickerIsVisible, setColorPickerIsVisible] = useState(false);
+  const [currentColor, setCurrentColor] = useState('white');
 
   const {
     homeIsOnLeft,
@@ -36,24 +37,28 @@ export function SettingsModal(props: Props) {
   const handleHomeBackgroundColorButtonPress = () => {
     console.log('Home background color button pressed.');
     setColorPickerIsVisible(true);
+    setCurrentColor(homeBackgroundColor);
     setColorRef.current = setHomeBackgroundColor;
   };
 
   const handleHomeTextColorButtonPress = () => {
     console.log('Home text color button pressed.');
     setColorPickerIsVisible(true);
+    setCurrentColor(homeTextColor);
     setColorRef.current = setHomeTextColor;
   };
 
   const handleVisitorBackgroundColorButtonPress = () => {
     console.log('Visitor background color button pressed.');
     setColorPickerIsVisible(true);
+    setCurrentColor(visitorBackgroundColor);
     setColorRef.current = setVisitorBackgroundColor;
   };
 
   const handleVisitorTextColorButtonPress = () => {
     console.log('Visitor text color button pressed.');
     setColorPickerIsVisible(true);
+    setCurrentColor(visitorTextColor);
     setColorRef.current = setVisitorTextColor;
   };
 
@@ -148,6 +153,7 @@ export function SettingsModal(props: Props) {
           <ColorPicker
             onColorPress={handleColorPress}
             style={styles.colorPicker}
+            currentColor={currentColor}
           />
         )}
       </View>

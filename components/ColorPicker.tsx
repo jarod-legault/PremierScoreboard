@@ -97,11 +97,12 @@ const allColors = [
 console.log(allColors);
 
 interface Props extends ViewProps {
+  currentColor: string;
   onColorPress: (color: string) => void;
 }
 
 export function ColorPicker(props: Props) {
-  const {style, ...restOfProps} = props;
+  const {currentColor, style, ...restOfProps} = props;
 
   return (
     <View {...restOfProps} style={[style, styles.container]}>
@@ -114,7 +115,14 @@ export function ColorPicker(props: Props) {
             key={colorRow[0]}>
             {colorRow.map(color => (
               <Pressable
-                style={[styles.colorContainer, {backgroundColor: color}]}
+                style={[
+                  styles.colorContainer,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    backgroundColor: color,
+                    borderWidth: currentColor === color ? 4 : 1,
+                  },
+                ]}
                 key={color}
                 onPress={() => props.onColorPress(color)}
               />
@@ -131,14 +139,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   colorContainer: {
-    borderWidth: 1,
     borderRadius: MIN_COLOR_WIDTH / 2,
     aspectRatio: 1,
     minWidth: MIN_COLOR_WIDTH,
-    margin: 1,
+    margin: 2,
   },
   container: {
     alignSelf: 'center',
     backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 20,
+    paddingRight: MIN_COLOR_WIDTH,
+    paddingBottom: 0,
   },
 });
