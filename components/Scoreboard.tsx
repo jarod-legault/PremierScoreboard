@@ -7,13 +7,14 @@ import {TeamScore} from './TeamScore';
 
 export function Scoreboard() {
   const {
-    homeIsOnLeft,
     homeName,
     homeScore,
-    setHomeName,
-    setVisitorName,
+    homeBackgroundColor,
+    homeTextColor,
     visitorName,
     visitorScore,
+    visitorBackgroundColor,
+    visitorTextColor,
     isInitialized,
   } = useTeamsContext();
 
@@ -25,28 +26,23 @@ export function Scoreboard() {
     <View style={styles.container}>
       <TeamScore
         isHome={true}
-        backgroundColor="black"
-        fontColor="gold"
+        backgroundColor={homeBackgroundColor}
+        textColor={homeTextColor}
         name={homeName}
         score={homeScore}
       />
       <TeamScore
         isHome={false}
-        backgroundColor="blue"
-        fontColor="red"
+        backgroundColor={visitorBackgroundColor}
+        textColor={visitorTextColor}
         name={visitorName}
         score={visitorScore}
       />
       <GestureArea onNameTap={() => setModalIsVisible(true)} />
       <SettingsModal
         visible={modalIsVisible}
-        homeName={homeName}
-        homeIsOnLeft={homeIsOnLeft}
-        onChangeHomeName={setHomeName}
-        visitorName={visitorName}
-        onChangeVisitorName={setVisitorName}
-        onCloseButtonPress={() => setModalIsVisible(false)}
-        onRequestClose={() => setModalIsVisible(false)}
+        onRequestCloseModal={() => setModalIsVisible(false)}
+        onRequestOpenModal={() => setModalIsVisible(true)}
       />
     </View>
   );

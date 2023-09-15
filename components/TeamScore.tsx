@@ -21,7 +21,7 @@ export type Measurements = {
 interface Props extends ViewProps {
   backgroundColor?: string;
   containerStyle?: object;
-  fontColor?: string;
+  textColor?: string;
   isHome: boolean;
   name: string;
   score: number;
@@ -82,13 +82,13 @@ export function TeamScore(props: Props) {
       <View style={styles.nameContainer}>
         <Text
           ref={nameRef}
-          style={{...styles.name, color: props.fontColor}}
+          style={{...styles.name, color: props.textColor}}
           onLayout={onNameLayout}>
           {props.name}
         </Text>
       </View>
       <View style={styles.scoreContainer}>
-        <Text style={{...styles.score, color: props.fontColor}}>
+        <Text style={{...styles.score, color: props.textColor}}>
           {props.score}
         </Text>
       </View>
