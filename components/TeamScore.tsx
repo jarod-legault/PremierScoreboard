@@ -83,12 +83,15 @@ export function TeamScore(props: Props) {
         <Text
           ref={nameRef}
           style={{...styles.name, color: props.textColor}}
+          adjustsFontSizeToFit
           onLayout={onNameLayout}>
           {props.name}
         </Text>
       </View>
       <View style={styles.scoreContainer}>
-        <Text style={{...styles.score, color: props.textColor}}>
+        <Text
+          style={{...styles.score, color: props.textColor}}
+          adjustsFontSizeToFit>
           {props.score}
         </Text>
       </View>
@@ -103,15 +106,16 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   name: {
-    fontSize: 40,
+    fontSize: 200,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
   nameContainer: {
-    marginVertical: 10,
+    height: '20%',
+    marginTop: 10,
   },
   score: {
-    fontSize: 270,
+    fontSize: 1000,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
