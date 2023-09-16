@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useGestureContext} from '../contexts/GestureContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 export type Measurements = {
   width: number;
@@ -76,24 +77,44 @@ export function TeamScore(props: Props) {
     <Animated.View
       style={{
         ...styles.container,
-        backgroundColor: props.backgroundColor,
         transform: [{translateX}],
       }}>
-      <View style={styles.nameContainer}>
-        <Text
-          ref={nameRef}
-          style={{...styles.name, color: props.textColor}}
-          adjustsFontSizeToFit
-          onLayout={onNameLayout}>
-          {props.name}
-        </Text>
+      <View style={styles.nameArea}>
+        <View
+          style={[
+            styles.nameContainer,
+            {
+              backgroundColor: props.backgroundColor,
+              borderColor: props.textColor,
+            },
+          ]}>
+          <Text
+            ref={nameRef}
+            style={{
+              ...styles.name,
+              color: props.textColor,
+            }}
+            adjustsFontSizeToFit
+            onLayout={onNameLayout}>
+            {props.name}
+          </Text>
+        </View>
       </View>
-      <View style={styles.scoreContainer}>
-        <Text
-          style={{...styles.score, color: props.textColor}}
-          adjustsFontSizeToFit>
-          {props.score}
-        </Text>
+      <View style={styles.scoreArea}>
+        <View
+          style={[
+            styles.scoreContainer,
+            {
+              backgroundColor: props.backgroundColor,
+              borderColor: props.textColor,
+            },
+          ]}>
+          <Text
+            style={{...styles.score, color: props.textColor}}
+            adjustsFontSizeToFit>
+            {props.score}
+          </Text>
+        </View>
       </View>
     </Animated.View>
   );
@@ -104,23 +125,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     width: '50%',
+    backgroundColor: 'white',
   },
-  name: {
-    fontSize: 200,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
+  nameArea: {
+    height: '20%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   nameContainer: {
-    height: '20%',
-    marginTop: 10,
+    height: '80%',
+    maxWidth: '90%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    borderWidth: 5,
   },
-  score: {
-    fontSize: 1000,
+  name: {
+    fontSize: 100,
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
-  scoreContainer: {
+  scoreArea: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scoreContainer: {
+    height: '95%',
+    aspectRatio: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 5,
+    // paddingHorizontal: 10,
+  },
+  score: {
+    // width: '100%',
+    fontSize: responsiveFontSize(20),
+    includeFontPadding: false,
+    textAlign: 'center',
+    // backgroundColor: 'white',
+    // transform: [{rotateX: '45deg'}, {perspective: 400}],
   },
 });
