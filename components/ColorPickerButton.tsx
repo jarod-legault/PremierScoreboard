@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   color: {
     borderWidth: 1,
     width: 30,
-    aspectRatio: 2,
+    aspectRatio: 1.5,
     marginLeft: 8,
   },
   colorRow: {
