@@ -156,15 +156,13 @@ const styles = StyleSheet.create({
   },
   scoreContainer: {
     height: '95%',
-    aspectRatio: 1,
+    width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
     borderWidth: 5,
-    // paddingHorizontal: 10,
   },
   score: {
-    // width: '100%',
     fontSize: responsiveFontSize(20),
     includeFontPadding: false,
     textAlign: 'center',
