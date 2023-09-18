@@ -11,6 +11,7 @@ import {
 import {useGestureContext} from '../contexts/GestureContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import {useAppContext} from '../contexts/AppContext';
 
 export type Measurements = {
   width: number;
@@ -29,6 +30,7 @@ interface Props extends ViewProps {
 }
 
 export function TeamScore(props: Props) {
+  const {appBackgroundColor} = useAppContext();
   const {homeIsOnLeft} = useTeamsContext();
 
   const nameRef = useRef<Text>(null);
@@ -77,6 +79,7 @@ export function TeamScore(props: Props) {
     <Animated.View
       style={{
         ...styles.container,
+        backgroundColor: appBackgroundColor,
         transform: [{translateX}],
       }}>
       <View style={styles.nameArea}>
@@ -125,7 +128,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     width: '50%',
-    backgroundColor: 'white',
   },
   nameArea: {
     height: '20%',

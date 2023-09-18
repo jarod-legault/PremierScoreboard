@@ -1,4 +1,5 @@
 export enum StorageKeys {
+  APP_BACKGROUND_COLOR = 'appBackgroundColor',
   HOME_IS_ON_LEFT = 'homeIsOnLeft',
   HOME_NAME = 'homeName',
   HOME_SCORE = 'homeScore',

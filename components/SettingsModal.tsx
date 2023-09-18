@@ -1,6 +1,7 @@
 import React, {useRef, useState} from 'react';
-import {Modal, ModalProps, StyleSheet, View} from 'react-native';
+import {Modal, ModalProps, StyleSheet, Text, View} from 'react-native';
 import {Button, IconButton, TextInput} from 'react-native-paper';
+import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
@@ -19,6 +20,7 @@ export function SettingsModal(props: Props) {
   const [resetConfirmationIsVisible, setResetConfirmationIsVisible] =
     useState(false);
 
+  const {appBackgroundColor, setAppBackgroundColor} = useAppContext();
   const {
     homeIsOnLeft,
     homeName,
@@ -40,35 +42,36 @@ export function SettingsModal(props: Props) {
   const setColorRef = useRef(setHomeBackgroundColor);
 
   const handleHomeBackgroundColorButtonPress = () => {
-    console.log('Home background color button pressed.');
     setColorPickerIsVisible(true);
     setCurrentColor(homeBackgroundColor);
     setColorRef.current = setHomeBackgroundColor;
   };
 
   const handleHomeTextColorButtonPress = () => {
-    console.log('Home text color button pressed.');
     setColorPickerIsVisible(true);
     setCurrentColor(homeTextColor);
     setColorRef.current = setHomeTextColor;
   };
 
   const handleVisitorBackgroundColorButtonPress = () => {
-    console.log('Visitor background color button pressed.');
     setColorPickerIsVisible(true);
     setCurrentColor(visitorBackgroundColor);
     setColorRef.current = setVisitorBackgroundColor;
   };
 
   const handleVisitorTextColorButtonPress = () => {
-    console.log('Visitor text color button pressed.');
     setColorPickerIsVisible(true);
     setCurrentColor(visitorTextColor);
     setColorRef.current = setVisitorTextColor;
   };
 
+  const handleAppBackgroundColorPress = () => {
+    setColorPickerIsVisible(true);
+    setCurrentColor(appBackgroundColor);
+    setColorRef.current = setAppBackgroundColor;
+  };
+
   const handleColorPress = (newColor: string) => {
-    console.log('color selected: ', newColor);
     setColorPickerIsVisible(false);
     setColorRef.current(newColor);
   };
@@ -156,6 +159,12 @@ export function SettingsModal(props: Props) {
             </View>
           </View>
           <View style={styles.bottomContainer}>
+            <ColorPickerButton
+              label="App background"
+              style={styles.appBackgroundColorPicker}
+              color={appBackgroundColor}
+              onPress={handleAppBackgroundColorPress}
+            />
             <Button
               mode="elevated"
               onPress={() => setResetConfirmationIsVisible(true)}>
@@ -186,6 +195,9 @@ export function SettingsModal(props: Props) {
 }
 
 const styles = StyleSheet.create({
+  appBackgroundColorPicker: {
+    marginBottom: 20,
+  },
   background: {
     flex: 1,
     alignItems: 'center',

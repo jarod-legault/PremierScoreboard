@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {GestureArea} from './GestureArea';
 import {SettingsModal} from './SettingsModal';
 import {TeamScore} from './TeamScore';
 
 export function Scoreboard() {
+  const {appBackgroundColor} = useAppContext();
   const {
     homeName,
     homeScore,
@@ -23,7 +25,7 @@ export function Scoreboard() {
   if (!isInitialized) return null;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: appBackgroundColor}]}>
       <TeamScore
         isHome={true}
         backgroundColor={homeBackgroundColor}
