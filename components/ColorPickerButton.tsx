@@ -1,18 +1,19 @@
 import React from 'react';
-import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
+import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
 type Props = {
   label: string;
   color: string;
   onPress: () => void;
+  labelStyle?: TextStyle;
   style?: ViewStyle;
 };
 
 export function ColorPickerButton(props: Props) {
   return (
     <View style={[props.style, styles.colorRow]}>
-      <Text>{props.label}</Text>
+      <Text style={props.labelStyle}>{props.label}</Text>
       <Pressable
         style={[styles.color, {backgroundColor: props.color}]}
         onPress={props.onPress}
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 30,
     aspectRatio: 2,
-    marginLeft: 5,
+    marginLeft: 8,
   },
   colorRow: {
     flexDirection: 'row',

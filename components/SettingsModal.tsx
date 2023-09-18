@@ -1,11 +1,13 @@
 import React, {useRef, useState} from 'react';
-import {Modal, ModalProps, StyleSheet, Text, View} from 'react-native';
-import {Button, IconButton, TextInput} from 'react-native-paper';
+import {Modal, ModalProps, StyleSheet, View} from 'react-native';
+import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
 import {Confirmation} from './Confirmation';
+
+const DEFAULT_FONT_SIZE = 18;
 
 interface Props extends ModalProps {
   onRequestCloseModal: () => void;
@@ -94,6 +96,7 @@ export function SettingsModal(props: Props) {
           <Text style={styles.title}>Settings</Text>
           <IconButton
             style={styles.closeButton}
+            size={30}
             icon="close-box"
             onPress={onRequestCloseModal}
           />
@@ -108,6 +111,7 @@ export function SettingsModal(props: Props) {
               <View style={styles.colorsContainer}>
                 <ColorPickerButton
                   label="Background"
+                  labelStyle={styles.labelStyle}
                   color={
                     homeIsOnLeft ? homeBackgroundColor : visitorBackgroundColor
                   }
@@ -119,6 +123,7 @@ export function SettingsModal(props: Props) {
                 />
                 <ColorPickerButton
                   label="Text"
+                  labelStyle={styles.labelStyle}
                   color={homeIsOnLeft ? homeTextColor : visitorTextColor}
                   onPress={
                     homeIsOnLeft
@@ -138,6 +143,7 @@ export function SettingsModal(props: Props) {
               <View style={styles.colorsContainer}>
                 <ColorPickerButton
                   label="Background"
+                  labelStyle={styles.labelStyle}
                   color={
                     homeIsOnLeft ? visitorBackgroundColor : homeBackgroundColor
                   }
@@ -149,6 +155,7 @@ export function SettingsModal(props: Props) {
                 />
                 <ColorPickerButton
                   label="Text"
+                  labelStyle={styles.labelStyle}
                   color={homeIsOnLeft ? visitorTextColor : homeTextColor}
                   onPress={
                     homeIsOnLeft
@@ -162,6 +169,7 @@ export function SettingsModal(props: Props) {
           <View style={styles.bottomContainer}>
             <ColorPickerButton
               label="App background"
+              labelStyle={styles.labelStyle}
               style={styles.appBackgroundColorPicker}
               color={appBackgroundColor}
               onPress={handleAppBackgroundColorPress}
@@ -169,7 +177,7 @@ export function SettingsModal(props: Props) {
             <Button
               mode="elevated"
               onPress={() => setResetConfirmationIsVisible(true)}>
-              Reset scores
+              <Text style={styles.resetButtonText}>Reset scores</Text>
             </Button>
           </View>
         </View>
@@ -211,6 +219,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
+  labelStyle: {
+    fontSize: DEFAULT_FONT_SIZE,
+  },
   modal: {
     flex: 1,
   },
@@ -229,6 +240,9 @@ const styles = StyleSheet.create({
   colorPicker: {
     position: 'absolute',
   },
+  resetButtonText: {
+    fontSize: DEFAULT_FONT_SIZE,
+  },
   resetConfirmation: {
     position: 'absolute',
   },
@@ -246,6 +260,6 @@ const styles = StyleSheet.create({
   title: {
     alignSelf: 'center',
     marginVertical: 10,
-    fontSize: 34,
+    fontSize: 40,
   },
 });
