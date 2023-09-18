@@ -91,6 +91,7 @@ export function SettingsModal(props: Props) {
       supportedOrientations={['landscape']}>
       <View style={styles.background}>
         <View style={styles.settingsContainer}>
+          <Text style={styles.title}>Settings</Text>
           <IconButton
             style={styles.closeButton}
             icon="close-box"
@@ -218,7 +219,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   closeButton: {
-    alignSelf: 'flex-end',
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   colorsContainer: {
     alignItems: 'flex-end',
@@ -233,11 +236,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    margin: 5,
-    padding: 8,
+    marginHorizontal: 10,
+    padding: 12,
     backgroundColor: 'rgb(230,230,230)',
   },
   teamsContainer: {
     flexDirection: 'row',
+  },
+  title: {
+    alignSelf: 'center',
+    marginVertical: 10,
+    fontSize: 34,
   },
 });
