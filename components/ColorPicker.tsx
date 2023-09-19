@@ -1,5 +1,5 @@
-import React from 'react';
-import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {Animated, Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Surface} from 'react-native-paper';
 
 const MIN_COLOR_WIDTH = 34;
@@ -97,6 +97,8 @@ const allColors = [
 ];
 console.log(allColors);
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 interface Props extends ViewProps {
   currentColor: string;
   onColorPress: (color: string) => void;
@@ -104,6 +106,29 @@ interface Props extends ViewProps {
 
 export function ColorPicker(props: Props) {
   const {currentColor, style, ...restOfProps} = props;
+
+  const colorValue = useRef(new Animated.Value(0)).current;
+
+  const changeToBlack = () => {
+    Animated.timing(colorValue, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(changeToWhite);
+  };
+
+  const changeToWhite = () => {
+    Animated.timing(colorValue, {
+      toValue: 255,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(changeToBlack);
+  };
+
+  useEffect(() => {
+    changeToBlack();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={style}>
@@ -124,13 +149,17 @@ export function ColorPicker(props: Props) {
                     key={color}
                     style={styles.colorSurface}
                     elevation={2}>
-                    <Pressable
+                    <AnimatedPressable
                       style={[
                         styles.colorContainer,
                         // eslint-disable-next-line react-native/no-inline-styles
                         {
                           backgroundColor: color,
                           borderWidth: currentColor === color ? 4 : 0,
+                          borderColor: colorValue.interpolate({
+                            inputRange: [0, 255],
+                            outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
+                          }),
                         },
                       ]}
                       onPress={() => props.onColorPress(color)}
