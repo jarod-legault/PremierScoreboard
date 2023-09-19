@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Animated,
   Easing,
@@ -68,12 +68,15 @@ export function TeamScore(props: Props) {
   }
   const translateX = useRef(new Animated.Value(newTranslateX)).current;
 
-  Animated.timing(translateX, {
-    toValue: newTranslateX,
-    duration: 200,
-    easing: Easing.ease,
-    useNativeDriver: true,
-  }).start(onNameLayout);
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: newTranslateX,
+      duration: 200,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start(onNameLayout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newTranslateX]);
 
   return (
     <Animated.View
