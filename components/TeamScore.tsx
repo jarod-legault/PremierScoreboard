@@ -69,10 +69,8 @@ export function TeamScore(props: Props) {
   const translateX = useRef(new Animated.Value(newTranslateX)).current;
 
   useEffect(() => {
-    Animated.timing(translateX, {
+    Animated.spring(translateX, {
       toValue: newTranslateX,
-      duration: 200,
-      easing: Easing.ease,
       useNativeDriver: true,
     }).start(onNameLayout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
