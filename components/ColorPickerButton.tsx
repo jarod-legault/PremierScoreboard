@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Surface, Text} from 'react-native-paper';
 
 type Props = {
   label: string;
@@ -13,25 +13,29 @@ type Props = {
 export function ColorPickerButton(props: Props) {
   return (
     <View style={[props.style, styles.colorRow]}>
-      <Text style={props.labelStyle}>{props.label}</Text>
-      <Pressable
-        style={[styles.color, {backgroundColor: props.color}]}
-        onPress={props.onPress}
-      />
+      <Text style={[props.labelStyle, styles.label]}>{props.label}</Text>
+      <Surface>
+        <Pressable
+          style={[styles.color, {backgroundColor: props.color}]}
+          onPress={props.onPress}
+        />
+      </Surface>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   color: {
-    borderWidth: 1,
+    elevation: 5,
     width: 30,
     aspectRatio: 1.5,
-    marginLeft: 8,
   },
   colorRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+  },
+  label: {
+    marginRight: 8,
   },
 });
