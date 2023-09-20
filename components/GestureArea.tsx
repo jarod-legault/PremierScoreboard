@@ -94,7 +94,6 @@ export function GestureArea(props: Props) {
     endYRef.current = locationY;
 
     const touchInfo = getTouchInfo();
-    console.log('touchInfo', touchInfo);
 
     touchInfo.isTap ? handleTap(touchInfo) : handleSwipe(touchInfo);
   };
