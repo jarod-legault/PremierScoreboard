@@ -36,27 +36,36 @@ function TeamsProvider({children}: TeamsProviderProps) {
   const [homeIsOnLeft, setHomeIsOnLeft, homeIsOnLeftIsInitialized] =
     usePersistentState<boolean>(true, StorageKeys.HOME_IS_ON_LEFT);
   const [homeName, setHomeName, homeNameIsInitialized] =
-    usePersistentState<string>('Lions', StorageKeys.HOME_NAME);
+    usePersistentState<string>('Vikings', StorageKeys.HOME_NAME);
   const [homeScore, setHomeScore, homeScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.HOME_SCORE);
   const [
     homeBackgroundColor,
     setHomeBackgroundColor,
     homeBackgroundColorIsInitialized,
-  ] = usePersistentState<string>('black', StorageKeys.HOME_BACKGROUND_COLOR);
+  ] = usePersistentState<string>(
+    'rgb(85, 85, 171)',
+    StorageKeys.HOME_BACKGROUND_COLOR,
+  );
   const [homeTextColor, setHomeTextColor, homeTextColorIsInitialized] =
-    usePersistentState<string>('gold', StorageKeys.HOME_TEXT_COLOR);
+    usePersistentState<string>('rgb(255, 255, 0)', StorageKeys.HOME_TEXT_COLOR);
   const [visitorName, setVisitorName, visitorNameIsInitialized] =
-    usePersistentState<string>('Tigers', StorageKeys.VISITOR_NAME);
+    usePersistentState<string>('Dolphins', StorageKeys.VISITOR_NAME);
   const [visitorScore, setVisitorScore, visitorScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.VISITOR_SCORE);
   const [
     visitorBackgroundColor,
     setVisitorBackgroundColor,
     visitorBackgroundColorIsInitialized,
-  ] = usePersistentState<string>('blue', StorageKeys.VISITOR_BACKGROUND_COLOR);
+  ] = usePersistentState<string>(
+    'rgb(43, 213, 213)',
+    StorageKeys.VISITOR_BACKGROUND_COLOR,
+  );
   const [visitorTextColor, setVisitorTextColor, visitorTextColorIsInitialized] =
-    usePersistentState<string>('red', StorageKeys.VISITOR_TEXT_COLOR);
+    usePersistentState<string>(
+      'rgb(255, 85, 0)',
+      StorageKeys.VISITOR_TEXT_COLOR,
+    );
 
   const decrementHomeScore = () => {
     const prevScore = homeScore;

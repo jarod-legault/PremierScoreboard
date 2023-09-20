@@ -17,7 +17,10 @@ function AppProvider({children}: AppProviderProps) {
     appBackgroundColor,
     setAppBackgroundColor,
     appBackgroundColorIsInitialized,
-  ] = usePersistentState<string>('lightgrey', StorageKeys.APP_BACKGROUND_COLOR);
+  ] = usePersistentState<string>(
+    'rgb(192, 192, 192)',
+    StorageKeys.APP_BACKGROUND_COLOR,
+  );
 
   const [isInitialized, setIsInitialized] = useState(false);
 
