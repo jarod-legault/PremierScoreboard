@@ -103,6 +103,13 @@ export function SettingsModal(props: Props) {
           <View style={styles.teamsContainer}>
             <View style={styles.teamContainer}>
               <TextInput
+                textColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
+                outlineColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
+                style={{
+                  backgroundColor: homeIsOnLeft
+                    ? homeBackgroundColor
+                    : visitorBackgroundColor,
+                }}
                 value={homeIsOnLeft ? homeName : visitorName}
                 mode="outlined"
                 dense
@@ -135,6 +142,13 @@ export function SettingsModal(props: Props) {
             </View>
             <View style={styles.teamContainer}>
               <TextInput
+                textColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
+                outlineColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
+                style={{
+                  backgroundColor: homeIsOnLeft
+                    ? visitorBackgroundColor
+                    : homeBackgroundColor,
+                }}
                 value={homeIsOnLeft ? visitorName : homeName}
                 mode="outlined"
                 dense
