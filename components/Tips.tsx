@@ -14,6 +14,7 @@ export function Tips(props: Props) {
       <Text style={styles.header}>Tips</Text>
       <View style={styles.tipsContainer}>
         <BulletPoint text="Tap on either team name to get to the settings screen." />
+        <BulletPoint text="Swipe ➡️ or ⬅️ to swap sides." />
         <BulletPoint text="Tap on the top half or bottom half of a score to ⬆️ or ⬇️ the score." />
         <Text style={styles.or}>OR</Text>
         <BulletPoint text="Swipe ⬆️ or ⬇️ on a team score to ⬆️ or ⬇️ the score." />
