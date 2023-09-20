@@ -101,7 +101,11 @@ export function SettingsModal(props: Props) {
             onPress={onRequestCloseModal}
           />
           <View style={styles.teamsContainer}>
-            <View style={styles.teamContainer}>
+            <View
+              style={[
+                styles.teamContainer,
+                {backgroundColor: appBackgroundColor},
+              ]}>
               <TextInput
                 textColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
                 outlineColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
@@ -140,7 +144,11 @@ export function SettingsModal(props: Props) {
                 />
               </View>
             </View>
-            <View style={styles.teamContainer}>
+            <View
+              style={[
+                styles.teamContainer,
+                {backgroundColor: appBackgroundColor},
+              ]}>
               <TextInput
                 textColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
                 outlineColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
@@ -263,10 +271,11 @@ const styles = StyleSheet.create({
   teamContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgrey',
     borderRadius: 5,
     marginHorizontal: 10,
     padding: 12,
-    backgroundColor: 'rgb(230,230,230)',
   },
   teamsContainer: {
     flexDirection: 'row',
