@@ -6,6 +6,7 @@ import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
 import {Confirmation} from './Confirmation';
+import {Tips} from './Tips';
 
 const DEFAULT_FONT_SIZE = 18;
 
@@ -19,6 +20,7 @@ export function SettingsModal(props: Props) {
 
   const [colorPickerIsVisible, setColorPickerIsVisible] = useState(false);
   const [currentColor, setCurrentColor] = useState('white');
+  const [tipsAreVisible, setTipsAreVisible] = useState(false);
   const [resetConfirmationIsVisible, setResetConfirmationIsVisible] =
     useState(false);
 
@@ -42,6 +44,9 @@ export function SettingsModal(props: Props) {
   } = useTeamsContext();
 
   const setColorRef = useRef(setHomeBackgroundColor);
+
+  const showTips = () => setTipsAreVisible(true);
+  const hideTips = () => setTipsAreVisible(false);
 
   const handleHomeBackgroundColorButtonPress = () => {
     setColorPickerIsVisible(true);
@@ -94,6 +99,12 @@ export function SettingsModal(props: Props) {
       <View style={styles.background}>
         <View style={styles.settingsContainer}>
           <Text style={styles.title}>Settings</Text>
+          <IconButton
+            style={styles.tipsButton}
+            size={30}
+            icon="help-box"
+            onPress={showTips}
+          />
           <IconButton
             style={styles.closeButton}
             size={30}
@@ -220,6 +231,9 @@ export function SettingsModal(props: Props) {
             currentColor={currentColor}
           />
         )}
+        {tipsAreVisible && (
+          <Tips style={styles.tips} onRequestClose={hideTips} />
+        )}
       </View>
     </Modal>
   );
@@ -256,10 +270,18 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
   },
+  tipsButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
   colorsContainer: {
     alignItems: 'flex-end',
   },
   colorPicker: {
+    position: 'absolute',
+  },
+  tips: {
     position: 'absolute',
   },
   resetButtonText: {
