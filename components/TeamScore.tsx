@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
-  Easing,
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useGestureContext} from '../contexts/GestureContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
 import {useAppContext} from '../contexts/AppContext';
 
 export type Measurements = {
@@ -30,6 +29,7 @@ interface Props extends ViewProps {
 }
 
 export function TeamScore(props: Props) {
+  const [scoreContainerWidth, setScoreContainerWidth] = useState(0);
   const {appBackgroundColor} = useAppContext();
   const {homeIsOnLeft} = useTeamsContext();
 
@@ -76,6 +76,13 @@ export function TeamScore(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTranslateX]);
 
+  let scoreFontSize: number;
+  if (props.score < 100) {
+    scoreFontSize = scoreContainerWidth / 1.5;
+  } else {
+    scoreFontSize = scoreContainerWidth / 1.9;
+  }
+
   return (
     <Animated.View
       style={{
@@ -112,12 +119,20 @@ export function TeamScore(props: Props) {
               backgroundColor: props.backgroundColor,
               borderColor: props.textColor,
             },
-          ]}>
-          <Text
-            style={{...styles.score, color: props.textColor}}
-            adjustsFontSizeToFit>
-            {props.score}
-          </Text>
+          ]}
+          onLayout={(event: LayoutChangeEvent) =>
+            setScoreContainerWidth(event.nativeEvent.layout.width)
+          }>
+          {!!scoreContainerWidth && (
+            <Text
+              style={{
+                ...styles.score,
+                color: props.textColor,
+                fontSize: scoreFontSize,
+              }}>
+              {props.score}
+            </Text>
+          )}
         </View>
       </View>
     </Animated.View>
@@ -164,7 +179,6 @@ const styles = StyleSheet.create({
     borderWidth: 5,
   },
   score: {
-    fontSize: responsiveFontSize(20),
     includeFontPadding: false,
     textAlign: 'center',
     // backgroundColor: 'white',
