@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  Easing,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -11,6 +11,8 @@ import {
 import {useGestureContext} from '../contexts/GestureContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {useAppContext} from '../contexts/AppContext';
+
+const ROTATE_DURATION_90_DEGREES = 130;
 
 export type Measurements = {
   width: number;
@@ -30,6 +32,7 @@ interface Props extends ViewProps {
 
 export function TeamScore(props: Props) {
   const [scoreContainerWidth, setScoreContainerWidth] = useState(0);
+  const [currentScore, setCurrentScore] = useState(props.score);
   const {appBackgroundColor} = useAppContext();
   const {homeIsOnLeft} = useTeamsContext();
 
@@ -93,7 +96,10 @@ export function TeamScore(props: Props) {
   } else {
     newTranslateX = homeIsOnLeft ? 0 : screenWidth / -2;
   }
+
+  const isFirstRenderRef = useRef(true);
   const translateX = useRef(new Animated.Value(newTranslateX)).current;
+  const rotateXRef = useRef(new Animated.Value(0));
 
   const updateCoordinates = () => {
     onNameLayout();
@@ -107,6 +113,88 @@ export function TeamScore(props: Props) {
     }).start(updateCoordinates);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTranslateX]);
+
+  useEffect(() => {
+    const rotateTo90 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: 90,
+        duration: ROTATE_DURATION_90_DEGREES,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => {
+        updateScore();
+        rotateTo270();
+      });
+    };
+
+    const updateScore = () => {
+      setCurrentScore(props.score);
+    };
+
+    const rotateTo270 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: 270,
+        duration: 0,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(rotateTo360);
+    };
+
+    const rotateTo360 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: 360,
+        duration: ROTATE_DURATION_90_DEGREES,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(resetRotation);
+    };
+
+    const rotateToNegative90 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: -90,
+        duration: ROTATE_DURATION_90_DEGREES,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => {
+        updateScore();
+        rotateToNegative270();
+      });
+    };
+
+    const rotateToNegative270 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: -270,
+        duration: 0,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(rotateToNegative360);
+    };
+
+    const rotateToNegative360 = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: -360,
+        duration: ROTATE_DURATION_90_DEGREES,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(resetRotation);
+    };
+
+    const resetRotation = () => {
+      Animated.timing(rotateXRef.current, {
+        toValue: 0,
+        duration: 0,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    };
+
+    if (!isFirstRenderRef.current) {
+      props.score > currentScore ? rotateTo90() : rotateToNegative90();
+    }
+
+    isFirstRenderRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.score]);
 
   let scoreFontSize: number;
   if (props.score < 100) {
@@ -144,13 +232,21 @@ export function TeamScore(props: Props) {
         </View>
       </View>
       <View style={styles.scoreArea}>
-        <View
+        <Animated.View
           ref={scoreRef}
           style={[
             styles.scoreContainer,
             {
               backgroundColor: props.backgroundColor,
               borderColor: props.textColor,
+              transform: [
+                {
+                  rotateX: rotateXRef.current.interpolate({
+                    inputRange: [0, 360],
+                    outputRange: ['0deg', '350deg'],
+                  }),
+                },
+              ],
             },
           ]}
           onLayout={onScoreLayout}>
@@ -161,10 +257,10 @@ export function TeamScore(props: Props) {
                 color: props.textColor,
                 fontSize: scoreFontSize,
               }}>
-              {props.score}
+              {currentScore}
             </Text>
           )}
-        </View>
+        </Animated.View>
       </View>
     </Animated.View>
   );
