@@ -11,8 +11,12 @@ type ShapeCoordinates = {
 type Value = {
   getHomeNameCoordinates: () => ShapeCoordinates;
   setHomeNameCoordinates: (newCoordinates: ShapeCoordinates) => void;
+  getHomeScoreCoordinates: () => ShapeCoordinates;
+  setHomeScoreCoordinates: (newCoordinates: ShapeCoordinates) => void;
   getVisitorNameCoordinates: () => ShapeCoordinates;
   setVisitorNameCoordinates: (newCoordinates: ShapeCoordinates) => void;
+  getVisitorScoreCoordinates: () => ShapeCoordinates;
+  setVisitorScoreCoordinates: (newCoordinates: ShapeCoordinates) => void;
 };
 
 const DEFAULT_COORDINATES: ShapeCoordinates = {x1: 0, x2: 0, y1: 0, y2: 0};
@@ -24,16 +28,28 @@ function GestureProvider({children}: GestureProviderProps) {
   const setHomeNameCoordinates = (newCoordinates: ShapeCoordinates) =>
     (homeNameCoordinatesRef.current = newCoordinates);
   const getHomeNameCoordinates = () => homeNameCoordinatesRef.current;
+  const homeScoreCoordinatesRef = useRef(DEFAULT_COORDINATES);
+  const setHomeScoreCoordinates = (newCoordinates: ShapeCoordinates) =>
+    (homeScoreCoordinatesRef.current = newCoordinates);
+  const getHomeScoreCoordinates = () => homeScoreCoordinatesRef.current;
   const visitorNameCoordinatesRef = useRef(DEFAULT_COORDINATES);
   const setVisitorNameCoordinates = (newCoordinates: ShapeCoordinates) =>
     (visitorNameCoordinatesRef.current = newCoordinates);
   const getVisitorNameCoordinates = () => visitorNameCoordinatesRef.current;
+  const visitorScoreCoordinatesRef = useRef(DEFAULT_COORDINATES);
+  const setVisitorScoreCoordinates = (newCoordinates: ShapeCoordinates) =>
+    (visitorScoreCoordinatesRef.current = newCoordinates);
+  const getVisitorScoreCoordinates = () => visitorScoreCoordinatesRef.current;
 
   const value: Value = {
     getHomeNameCoordinates,
     setHomeNameCoordinates,
+    getHomeScoreCoordinates,
+    setHomeScoreCoordinates,
     getVisitorNameCoordinates,
     setVisitorNameCoordinates,
+    getVisitorScoreCoordinates,
+    setVisitorScoreCoordinates,
   };
 
   return (

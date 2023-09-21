@@ -34,9 +34,14 @@ export function TeamScore(props: Props) {
   const {homeIsOnLeft} = useTeamsContext();
 
   const nameRef = useRef<Text>(null);
+  const scoreRef = useRef<Text>(null);
 
-  const {setHomeNameCoordinates, setVisitorNameCoordinates} =
-    useGestureContext();
+  const {
+    setHomeNameCoordinates,
+    setHomeScoreCoordinates,
+    setVisitorNameCoordinates,
+    setVisitorScoreCoordinates,
+  } = useGestureContext();
 
   const handleNameMeasurement = (measurements: Measurements) => {
     const coordinates = {
@@ -59,6 +64,28 @@ export function TeamScore(props: Props) {
     }
   };
 
+  const handleScoreMeasurement = (measurements: Measurements) => {
+    const coordinates = {
+      x1: measurements.pageX,
+      x2: measurements.pageX + measurements.width,
+      y1: measurements.pageY,
+      y2: measurements.pageY + measurements.height,
+    };
+
+    props.isHome
+      ? setHomeScoreCoordinates(coordinates)
+      : setVisitorScoreCoordinates(coordinates);
+  };
+
+  const onScoreLayout = () => {
+    if (scoreRef.current) {
+      scoreRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setScoreContainerWidth(width);
+        handleScoreMeasurement({width, height, pageX, pageY});
+      });
+    }
+  };
+
   const {width: screenWidth} = useWindowDimensions();
   let newTranslateX: number;
   if (props.isHome) {
@@ -68,17 +95,22 @@ export function TeamScore(props: Props) {
   }
   const translateX = useRef(new Animated.Value(newTranslateX)).current;
 
+  const updateCoordinates = () => {
+    onNameLayout();
+    onScoreLayout();
+  };
+
   useEffect(() => {
     Animated.spring(translateX, {
       toValue: newTranslateX,
       useNativeDriver: true,
-    }).start(onNameLayout);
+    }).start(updateCoordinates);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTranslateX]);
 
   let scoreFontSize: number;
   if (props.score < 100) {
-    scoreFontSize = scoreContainerWidth / 1.5;
+    scoreFontSize = scoreContainerWidth / 1.6;
   } else {
     scoreFontSize = scoreContainerWidth / 1.9;
   }
@@ -92,6 +124,8 @@ export function TeamScore(props: Props) {
       }}>
       <View style={styles.nameArea}>
         <View
+          ref={nameRef}
+          onLayout={onNameLayout}
           style={[
             styles.nameContainer,
             {
@@ -100,19 +134,18 @@ export function TeamScore(props: Props) {
             },
           ]}>
           <Text
-            ref={nameRef}
             style={{
               ...styles.name,
               color: props.textColor,
             }}
-            adjustsFontSizeToFit
-            onLayout={onNameLayout}>
+            adjustsFontSizeToFit>
             {props.name}
           </Text>
         </View>
       </View>
       <View style={styles.scoreArea}>
         <View
+          ref={scoreRef}
           style={[
             styles.scoreContainer,
             {
@@ -120,9 +153,7 @@ export function TeamScore(props: Props) {
               borderColor: props.textColor,
             },
           ]}
-          onLayout={(event: LayoutChangeEvent) =>
-            setScoreContainerWidth(event.nativeEvent.layout.width)
-          }>
+          onLayout={onScoreLayout}>
           {!!scoreContainerWidth && (
             <Text
               style={{
@@ -171,7 +202,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scoreContainer: {
-    height: '95%',
+    height: '90%',
     width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -180,7 +211,6 @@ const styles = StyleSheet.create({
   },
   score: {
     includeFontPadding: false,
-    textAlign: 'center',
     // backgroundColor: 'white',
     // transform: [{rotateX: '45deg'}, {perspective: 400}],
   },

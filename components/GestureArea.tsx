@@ -10,18 +10,25 @@ import {useTeamsContext} from '../contexts/TeamsContext';
 
 const MINIMUM_SWIPE_LENGTH = 50;
 const CENTER_WIDTH = 50;
+const SCREEN_EDGE_WIDTH = 20;
 
 type TouchInfo = {
   isTap: boolean;
   startsWithinTeamName: boolean;
-  startsNearCenterLine: boolean;
   isHorizontal: boolean;
   isUp: boolean;
   isDown: boolean;
   staysOnLeft: boolean;
   staysOnRight: boolean;
-  staysOnTop: boolean;
-  staysOnBottom: boolean;
+  startsInHomeScoreTopHalf: boolean;
+  startsInHomeScoreBottomHalf: boolean;
+  startsInVisitorScoreTopHalf: boolean;
+  startsInVisitorScoreBottomHalf: boolean;
+  startsNearScreenEdge: boolean;
+  startsInHomeScore: boolean;
+  startsInVisitorScore: boolean;
+  endsInHomeHalf: boolean;
+  endsInVisitorHalf: boolean;
 };
 
 type Props = {
@@ -38,8 +45,12 @@ export function GestureArea(props: Props) {
     setHomeIsOnLeft,
   } = useTeamsContext();
 
-  const {getHomeNameCoordinates, getVisitorNameCoordinates} =
-    useGestureContext();
+  const {
+    getHomeNameCoordinates,
+    getHomeScoreCoordinates,
+    getVisitorNameCoordinates,
+    getVisitorScoreCoordinates,
+  } = useGestureContext();
 
   const startXRef = useRef(0);
   const startYRef = useRef(0);
@@ -54,37 +65,44 @@ export function GestureArea(props: Props) {
     startYRef.current = locationY;
   };
 
-  const handleScoreTap = (touchInfo: TouchInfo) => {
-    if (touchInfo.staysOnTop && touchInfo.staysOnLeft) {
-      homeIsOnLeft ? incrementHomeScore() : incrementVisitorScore();
-    } else if (touchInfo.staysOnTop && touchInfo.staysOnRight) {
-      homeIsOnLeft ? incrementVisitorScore() : incrementHomeScore();
-    } else if (touchInfo.staysOnBottom && touchInfo.staysOnRight) {
-      homeIsOnLeft ? decrementVisitorScore() : decrementHomeScore();
-    } else if (touchInfo.staysOnBottom && touchInfo.staysOnLeft) {
-      homeIsOnLeft ? decrementHomeScore() : decrementVisitorScore();
-    }
-  };
-
   const handleTap = (touchInfo: TouchInfo) => {
     if (touchInfo.startsWithinTeamName) {
       props.onNameTap();
-    } else if (!touchInfo.startsNearCenterLine) {
-      handleScoreTap(touchInfo);
+    } else if (touchInfo.startsInHomeScoreTopHalf) {
+      incrementHomeScore();
+    } else if (touchInfo.startsInHomeScoreBottomHalf) {
+      decrementHomeScore();
+    } else if (touchInfo.startsInVisitorScoreTopHalf) {
+      incrementVisitorScore();
+    } else if (touchInfo.startsInVisitorScoreBottomHalf) {
+      decrementVisitorScore();
     }
   };
 
   const handleSwipe = (touchInfo: TouchInfo) => {
-    if (touchInfo.isHorizontal) {
+    const {
+      startsNearScreenEdge,
+      isHorizontal,
+      isUp,
+      isDown,
+      startsInHomeScore,
+      endsInHomeHalf,
+      startsInVisitorScore,
+      endsInVisitorHalf,
+    } = touchInfo;
+
+    if (startsNearScreenEdge) return;
+
+    if (isHorizontal) {
       setHomeIsOnLeft(!homeIsOnLeft);
-    } else if (touchInfo.isUp && touchInfo.staysOnLeft) {
-      homeIsOnLeft ? incrementHomeScore() : incrementVisitorScore();
-    } else if (touchInfo.isDown && touchInfo.staysOnLeft) {
-      homeIsOnLeft ? decrementHomeScore() : decrementVisitorScore();
-    } else if (touchInfo.isUp && touchInfo.staysOnRight) {
-      homeIsOnLeft ? incrementVisitorScore() : incrementHomeScore();
-    } else if (touchInfo.isDown && touchInfo.staysOnRight) {
-      homeIsOnLeft ? decrementVisitorScore() : decrementHomeScore();
+    } else if (isUp && startsInHomeScore && endsInHomeHalf) {
+      incrementHomeScore();
+    } else if (isDown && startsInHomeScore && endsInHomeHalf) {
+      decrementHomeScore();
+    } else if (isUp && startsInVisitorScore && endsInVisitorHalf) {
+      incrementVisitorScore();
+    } else if (isDown && startsInVisitorScore && endsInVisitorHalf) {
+      decrementVisitorScore();
     }
   };
 
@@ -109,6 +127,7 @@ export function GestureArea(props: Props) {
 
     const isTap =
       deltaX < MINIMUM_SWIPE_LENGTH && deltaY < MINIMUM_SWIPE_LENGTH;
+    const isSwipe = !isTap;
 
     const homeNameCoordinates = getHomeNameCoordinates();
     const startsWithinHomeTeamName =
@@ -125,36 +144,89 @@ export function GestureArea(props: Props) {
     const startsWithinTeamName =
       startsWithinHomeTeamName || startsWithinVisitorTeamName;
 
-    const horizontalCenter = screenHeight / 2;
-    const verticalCenter = screenWidth / 2;
-    const startsNearHorizontalCenter =
-      Math.abs(startY - horizontalCenter) < CENTER_WIDTH / 2;
-    const startsNearVerticalCenter =
-      Math.abs(startX - verticalCenter) < CENTER_WIDTH / 2;
-    const startsNearCenterLine =
-      startsNearHorizontalCenter || startsNearVerticalCenter;
+    const {
+      x1: homeScoreX1,
+      x2: homeScoreX2,
+      y1: homeScoreY1,
+      y2: homeScoreY2,
+    } = getHomeScoreCoordinates();
+    const {
+      x1: visitorScoreX1,
+      x2: visitorScoreX2,
+      y1: visitorScoreY1,
+      y2: visitorScoreY2,
+    } = getVisitorScoreCoordinates();
+    const scoreMidHeight = Math.round((homeScoreY2 + homeScoreY1) / 2);
+    const screenMidWidth = screenWidth / 2;
 
-    const isHorizontal = deltaX > deltaY;
-    const isVertical = deltaY > deltaX;
+    const isHorizontal = isSwipe && deltaX > deltaY;
+    const isVertical = isSwipe && deltaY > deltaX;
     const isUp = isVertical && startY > endY;
     const isDown = isVertical && startY < endY;
 
-    const staysOnLeft = startX < verticalCenter && endX < verticalCenter;
-    const staysOnRight = startX > verticalCenter && endX > verticalCenter;
-    const staysOnTop = startY < horizontalCenter && endY < horizontalCenter;
-    const staysOnBottom = startY > horizontalCenter && endY > horizontalCenter;
+    const staysOnLeft = startX < screenMidWidth && endX < screenMidWidth;
+    const staysOnRight = startX > screenMidWidth && endX > screenMidWidth;
+
+    const startsInHomeScoreTopHalf =
+      startX > homeScoreX1 &&
+      startX < homeScoreX2 &&
+      startY > homeScoreY1 &&
+      startY < scoreMidHeight - CENTER_WIDTH / 2;
+    const startsInHomeScoreBottomHalf =
+      startX > homeScoreX1 &&
+      startX < homeScoreX2 &&
+      startY > scoreMidHeight + CENTER_WIDTH / 2 &&
+      startY < homeScoreY2;
+    const startsInVisitorScoreTopHalf =
+      startX > visitorScoreX1 &&
+      startX < visitorScoreX2 &&
+      startY > visitorScoreY1 &&
+      startY < scoreMidHeight - CENTER_WIDTH / 2;
+    const startsInVisitorScoreBottomHalf =
+      startX > visitorScoreX1 &&
+      startX < visitorScoreX2 &&
+      startY > scoreMidHeight + CENTER_WIDTH / 2 &&
+      startY < visitorScoreY2;
+
+    const startsNearScreenEdge =
+      startX < SCREEN_EDGE_WIDTH ||
+      startX > screenWidth - SCREEN_EDGE_WIDTH ||
+      startY < SCREEN_EDGE_WIDTH ||
+      startY > screenHeight - SCREEN_EDGE_WIDTH;
+
+    const startsInHomeScore =
+      startX > homeScoreX1 &&
+      startX < homeScoreX2 &&
+      startY > homeScoreY1 &&
+      startY < homeScoreY2;
+    const startsInVisitorScore =
+      startX > visitorScoreX1 &&
+      startX < visitorScoreX2 &&
+      startY > visitorScoreY1 &&
+      startY < visitorScoreY2;
+
+    const endsInLeftHalf = endX < screenMidWidth;
+    const endsInHomeHalf =
+      (homeIsOnLeft && endsInLeftHalf) || (!homeIsOnLeft && !endsInLeftHalf);
+    const endsInVisitorHalf = !endsInHomeHalf;
 
     return {
       isTap,
       startsWithinTeamName,
-      startsNearCenterLine,
       isHorizontal,
       isUp,
       isDown,
       staysOnLeft,
       staysOnRight,
-      staysOnTop,
-      staysOnBottom,
+      startsInHomeScoreTopHalf,
+      startsInHomeScoreBottomHalf,
+      startsInVisitorScoreTopHalf,
+      startsInVisitorScoreBottomHalf,
+      startsNearScreenEdge,
+      startsInHomeScore,
+      startsInVisitorScore,
+      endsInHomeHalf,
+      endsInVisitorHalf,
     };
   };
 
