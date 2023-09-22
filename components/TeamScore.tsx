@@ -240,6 +240,7 @@ export function TeamScore(props: Props) {
               backgroundColor: props.backgroundColor,
               borderColor: props.textColor,
               transform: [
+                {perspective: 900},
                 {
                   rotateX: rotateXRef.current.interpolate({
                     inputRange: [0, 360],
