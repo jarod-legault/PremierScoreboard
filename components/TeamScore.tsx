@@ -243,7 +243,7 @@ export function TeamScore(props: Props) {
                 {
                   rotateX: rotateXRef.current.interpolate({
                     inputRange: [0, 360],
-                    outputRange: ['0deg', '350deg'],
+                    outputRange: ['0deg', '360deg'],
                   }),
                 },
               ],
