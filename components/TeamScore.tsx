@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useGestureContext} from '../contexts/GestureContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
-import {useAppContext} from '../contexts/AppContext';
 
 const ROTATE_DURATION_90_DEGREES = 130;
 
@@ -33,7 +32,6 @@ interface Props extends ViewProps {
 export function TeamScore(props: Props) {
   const [scoreContainerWidth, setScoreContainerWidth] = useState(0);
   const [currentScore, setCurrentScore] = useState(props.score);
-  const {appBackgroundColor} = useAppContext();
   const {homeIsOnLeft} = useTeamsContext();
 
   const nameRef = useRef<Text>(null);
@@ -207,7 +205,6 @@ export function TeamScore(props: Props) {
     <Animated.View
       style={{
         ...styles.container,
-        backgroundColor: appBackgroundColor,
         transform: [{translateX}],
       }}>
       <View style={styles.nameArea}>
@@ -272,6 +269,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     width: '50%',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   nameArea: {
     height: '20%',
