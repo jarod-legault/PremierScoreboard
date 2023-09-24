@@ -196,7 +196,7 @@ export function TeamScore(props: Props) {
 
   let scoreFontSize: number;
   if (props.score < 100) {
-    scoreFontSize = scoreContainerWidth / 1.6;
+    scoreFontSize = scoreContainerWidth / 1.7;
   } else {
     scoreFontSize = scoreContainerWidth / 1.9;
   }
@@ -302,9 +302,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    borderWidth: 5,
+    borderWidth: 10,
   },
   score: {
+    fontWeight: '400',
     includeFontPadding: false,
     // backgroundColor: 'white',
     // transform: [{rotateX: '45deg'}, {perspective: 400}],
