@@ -42,6 +42,7 @@ export function Scoreboard() {
         translateX={homeTranslateX}
         onIncrement={incrementHomeScore}
         onDecrement={decrementHomeScore}
+        onPressName={() => setModalIsVisible(true)}
       />
       <TeamScore
         backgroundColor={visitorBackgroundColor}
@@ -51,6 +52,7 @@ export function Scoreboard() {
         translateX={visitorTranslateX}
         onIncrement={incrementVisitorScore}
         onDecrement={decrementVisitorScore}
+        onPressName={() => setModalIsVisible(true)}
       />
       <SettingsModal
         visible={modalIsVisible}

@@ -22,6 +22,7 @@ interface Props extends ViewProps {
   translateX: number;
   onIncrement: () => void;
   onDecrement: () => void;
+  onPressName: () => void;
 }
 
 export function TeamScore(props: Props) {
@@ -139,8 +140,9 @@ export function TeamScore(props: Props) {
         transform: [{translateX}],
       }}>
       <View style={styles.nameArea}>
-        <View
+        <Pressable
           ref={nameRef}
+          onPress={props.onPressName}
           style={[
             styles.nameContainer,
             {
@@ -156,7 +158,7 @@ export function TeamScore(props: Props) {
             adjustsFontSizeToFit>
             {props.name}
           </Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.scoreArea}>
         <Animated.View
