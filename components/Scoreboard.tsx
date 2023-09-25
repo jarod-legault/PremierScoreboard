@@ -1,20 +1,24 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
-import {GestureArea} from './GestureArea';
 import {SettingsModal} from './SettingsModal';
 import {TeamScore} from './TeamScore';
 
 export function Scoreboard() {
   const {appBackgroundColor} = useAppContext();
   const {
+    homeIsOnLeft,
     homeName,
     homeScore,
+    incrementHomeScore,
+    decrementHomeScore,
     homeBackgroundColor,
     homeTextColor,
     visitorName,
     visitorScore,
+    incrementVisitorScore,
+    decrementVisitorScore,
     visitorBackgroundColor,
     visitorTextColor,
     isInitialized,
@@ -22,25 +26,32 @@ export function Scoreboard() {
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
+  const {width: screenWidth} = useWindowDimensions();
+  const homeTranslateX = homeIsOnLeft ? 0 : screenWidth / 2;
+  const visitorTranslateX = homeIsOnLeft ? 0 : screenWidth / -2;
+
   if (!isInitialized) return null;
 
   return (
     <View style={[styles.container, {backgroundColor: appBackgroundColor}]}>
       <TeamScore
-        isHome={true}
         backgroundColor={homeBackgroundColor}
         textColor={homeTextColor}
         name={homeName}
         score={homeScore}
+        translateX={homeTranslateX}
+        onIncrement={incrementHomeScore}
+        onDecrement={decrementHomeScore}
       />
       <TeamScore
-        isHome={false}
         backgroundColor={visitorBackgroundColor}
         textColor={visitorTextColor}
         name={visitorName}
         score={visitorScore}
+        translateX={visitorTranslateX}
+        onIncrement={incrementVisitorScore}
+        onDecrement={decrementVisitorScore}
       />
-      <GestureArea onNameTap={() => setModalIsVisible(true)} />
       <SettingsModal
         visible={modalIsVisible}
         onRequestCloseModal={() => setModalIsVisible(false)}

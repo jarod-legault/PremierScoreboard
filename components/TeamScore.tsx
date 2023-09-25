@@ -2,115 +2,47 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
+  LayoutChangeEvent,
+  Pressable,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
   ViewProps,
 } from 'react-native';
-import {useGestureContext} from '../contexts/GestureContext';
-import {useTeamsContext} from '../contexts/TeamsContext';
+import {useFirstRenderIsComplete} from '../hooks/useFirstRenderIsComplete';
 
 const ROTATE_DURATION_90_DEGREES = 130;
-
-export type Measurements = {
-  width: number;
-  height: number;
-  pageX: number;
-  pageY: number;
-};
 
 interface Props extends ViewProps {
   backgroundColor?: string;
   containerStyle?: object;
   textColor?: string;
-  isHome: boolean;
   name: string;
   score: number;
+  translateX: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
 }
 
 export function TeamScore(props: Props) {
   const [scoreContainerWidth, setScoreContainerWidth] = useState(0);
   const [currentScore, setCurrentScore] = useState(props.score);
-  const {homeIsOnLeft} = useTeamsContext();
 
   const nameRef = useRef<Text>(null);
   const scoreRef = useRef<Text>(null);
 
-  const {
-    setHomeNameCoordinates,
-    setHomeScoreCoordinates,
-    setVisitorNameCoordinates,
-    setVisitorScoreCoordinates,
-  } = useGestureContext();
+  const {firstRenderIsComplete} = useFirstRenderIsComplete();
 
-  const handleNameMeasurement = (measurements: Measurements) => {
-    const coordinates = {
-      x1: measurements.pageX,
-      x2: measurements.pageX + measurements.width,
-      y1: measurements.pageY,
-      y2: measurements.pageY + measurements.height,
-    };
-
-    props.isHome
-      ? setHomeNameCoordinates(coordinates)
-      : setVisitorNameCoordinates(coordinates);
-  };
-
-  const onNameLayout = () => {
-    if (nameRef.current) {
-      nameRef.current.measure((x, y, width, height, pageX, pageY) => {
-        handleNameMeasurement({width, height, pageX, pageY});
-      });
-    }
-  };
-
-  const handleScoreMeasurement = (measurements: Measurements) => {
-    const coordinates = {
-      x1: measurements.pageX,
-      x2: measurements.pageX + measurements.width,
-      y1: measurements.pageY,
-      y2: measurements.pageY + measurements.height,
-    };
-
-    props.isHome
-      ? setHomeScoreCoordinates(coordinates)
-      : setVisitorScoreCoordinates(coordinates);
-  };
-
-  const onScoreLayout = () => {
-    if (scoreRef.current) {
-      scoreRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setScoreContainerWidth(width);
-        handleScoreMeasurement({width, height, pageX, pageY});
-      });
-    }
-  };
-
-  const {width: screenWidth} = useWindowDimensions();
-  let newTranslateX: number;
-  if (props.isHome) {
-    newTranslateX = homeIsOnLeft ? 0 : screenWidth / 2;
-  } else {
-    newTranslateX = homeIsOnLeft ? 0 : screenWidth / -2;
-  }
-
-  const isFirstRenderRef = useRef(true);
-  const translateX = useRef(new Animated.Value(newTranslateX)).current;
+  const translateX = useRef(new Animated.Value(props.translateX)).current;
   const rotateXRef = useRef(new Animated.Value(0));
-
-  const updateCoordinates = () => {
-    onNameLayout();
-    onScoreLayout();
-  };
 
   useEffect(() => {
     Animated.spring(translateX, {
-      toValue: newTranslateX,
+      toValue: props.translateX,
       useNativeDriver: true,
-    }).start(updateCoordinates);
+    }).start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newTranslateX]);
+  }, [props.translateX]);
 
   useEffect(() => {
     const rotateTo90 = () => {
@@ -186,11 +118,10 @@ export function TeamScore(props: Props) {
       }).start();
     };
 
-    if (!isFirstRenderRef.current) {
+    if (firstRenderIsComplete) {
       props.score > currentScore ? rotateTo90() : rotateToNegative90();
     }
 
-    isFirstRenderRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.score]);
 
@@ -210,7 +141,6 @@ export function TeamScore(props: Props) {
       <View style={styles.nameArea}>
         <View
           ref={nameRef}
-          onLayout={onNameLayout}
           style={[
             styles.nameContainer,
             {
@@ -247,7 +177,9 @@ export function TeamScore(props: Props) {
               ],
             },
           ]}
-          onLayout={onScoreLayout}>
+          onLayout={(event: LayoutChangeEvent) =>
+            setScoreContainerWidth(event.nativeEvent.layout.width)
+          }>
           {!!scoreContainerWidth && (
             <Text
               style={{
@@ -258,6 +190,10 @@ export function TeamScore(props: Props) {
               {currentScore}
             </Text>
           )}
+          <View style={styles.touchContainer}>
+            <Pressable style={styles.pressable} onPress={props.onIncrement} />
+            <Pressable style={styles.pressable} onPress={props.onDecrement} />
+          </View>
         </Animated.View>
       </View>
     </Animated.View>
@@ -307,7 +243,16 @@ const styles = StyleSheet.create({
   score: {
     fontWeight: '400',
     includeFontPadding: false,
-    // backgroundColor: 'white',
-    // transform: [{rotateX: '45deg'}, {perspective: 400}],
+  },
+  touchContainer: {
+    justifyContent: 'space-between',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  pressable: {
+    height: '42%',
   },
 });
