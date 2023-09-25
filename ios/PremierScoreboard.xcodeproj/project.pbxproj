@@ -571,6 +571,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PB5T5JA4S5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PremierScoreboard/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Premier Scoreboard";
@@ -604,6 +605,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PB5T5JA4S5;
 				INFOPLIST_FILE = PremierScoreboard/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Premier Scoreboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
