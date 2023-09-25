@@ -27,6 +27,7 @@ export function SettingsModal(props: Props) {
   const {appBackgroundColor, setAppBackgroundColor} = useAppContext();
   const {
     homeIsOnLeft,
+    setHomeIsOnLeft,
     homeName,
     setHomeName,
     homeBackgroundColor,
@@ -87,6 +88,11 @@ export function SettingsModal(props: Props) {
     setHomeScore(0);
     setVisitorScore(0);
     setResetConfirmationIsVisible(false);
+  };
+
+  const swapSides = () => {
+    setHomeIsOnLeft(!homeIsOnLeft);
+    onRequestCloseModal();
   };
 
   return (
@@ -155,6 +161,12 @@ export function SettingsModal(props: Props) {
                 />
               </View>
             </View>
+            <IconButton
+              icon="swap-horizontal-circle-outline"
+              size={40}
+              style={styles.swapButton}
+              onPress={swapSides}
+            />
             <View
               style={[
                 styles.teamContainer,
@@ -306,5 +318,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
     fontSize: 40,
+  },
+  swapButton: {
+    alignSelf: 'center',
+    margin: -10,
   },
 });
