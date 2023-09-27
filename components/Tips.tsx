@@ -10,17 +10,17 @@ type Props = {
 
 export function Tips(props: Props) {
   return (
-    <Surface style={[props.style, styles.container]}>
-      <Text style={styles.header}>Tips</Text>
-      <View style={styles.tipsContainer}>
-        <BulletPoint text="Tap on either team name to get to the settings screen." />
-        <BulletPoint text="Swipe ➡️ or ⬅️ to swap sides." />
-        <BulletPoint text="Tap on the top half or bottom half of a score to ⬆️ or ⬇️ the score." />
-        <Text style={styles.or}>OR</Text>
-        <BulletPoint text="Swipe ⬆️ or ⬇️ on a team score to ⬆️ or ⬇️ the score." />
-      </View>
-      <Button onPress={props.onRequestClose}>Got it!</Button>
-    </Surface>
+    <View style={[props.style, styles.container]}>
+      <Surface style={styles.surface}>
+        <Text style={styles.header}>Tips</Text>
+        <View style={styles.tipsContainer}>
+          <BulletPoint text="Tap on either team name to go to the settings screen." />
+          <BulletPoint text="Tap on the top half or bottom half of a score to ⬆️ or ⬇️ the score." />
+          <BulletPoint text="Long press on the top half or bottom half of a score to ⬆️ or ⬇️ the score by an amount greater than 1." />
+        </View>
+        <Button onPress={props.onRequestClose}>Got it!</Button>
+      </Surface>
+    </View>
   );
 }
 
@@ -28,8 +28,15 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     backgroundColor: 'white',
+    maxWidth: '90%',
     borderRadius: 5,
+  },
+  surface: {
+    flex: 1,
     padding: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'lightgrey',
   },
   header: {
     fontSize: 36,
@@ -37,11 +44,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 10,
   },
-  or: {
-    marginLeft: 50,
-  },
   tipsContainer: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
   },
 });

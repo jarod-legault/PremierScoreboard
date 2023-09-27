@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {IconButton, Text} from 'react-native-paper';
+import {Text} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
   text: string;
@@ -9,15 +10,30 @@ type Props = {
 export function BulletPoint(props: Props) {
   return (
     <View style={styles.row}>
-      <IconButton icon="circle" size={10} />
-      <Text>{props.text}</Text>
+      <Icon name="check-circle-outline" size={22} style={styles.icon} />
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{props.text}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   row: {
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     flexDirection: 'row',
+    marginTop: 10,
+  },
+  textContainer: {
+    flexDirection: 'row',
+  },
+  text: {
+    fontSize: 16,
+    flexShrink: 1,
+    marginHorizontal: 6,
+  },
+  icon: {
+    marginTop: 1,
   },
 });

@@ -35,10 +35,11 @@ const TeamsContext = React.createContext<Value | undefined>(undefined);
 function TeamsProvider({children}: TeamsProviderProps) {
   const [homeIsOnLeft, setHomeIsOnLeft, homeIsOnLeftIsInitialized] =
     usePersistentState<boolean>(true, StorageKeys.HOME_IS_ON_LEFT);
-  const [homeName, setHomeName, homeNameIsInitialized] =
-    usePersistentState<string>('Vikings', StorageKeys.HOME_NAME);
+
   const [homeScore, setHomeScore, homeScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.HOME_SCORE);
+  const [homeName, setHomeName, homeNameIsInitialized] =
+    usePersistentState<string>('Vikings', StorageKeys.HOME_NAME);
   const [
     homeBackgroundColor,
     setHomeBackgroundColor,
@@ -49,10 +50,11 @@ function TeamsProvider({children}: TeamsProviderProps) {
   );
   const [homeTextColor, setHomeTextColor, homeTextColorIsInitialized] =
     usePersistentState<string>('hsl(60 80% 50%)', StorageKeys.HOME_TEXT_COLOR);
-  const [visitorName, setVisitorName, visitorNameIsInitialized] =
-    usePersistentState<string>('Jets', StorageKeys.VISITOR_NAME);
+
   const [visitorScore, setVisitorScore, visitorScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.VISITOR_SCORE);
+  const [visitorName, setVisitorName, visitorNameIsInitialized] =
+    usePersistentState<string>('Jets', StorageKeys.VISITOR_NAME);
   const [
     visitorBackgroundColor,
     setVisitorBackgroundColor,
