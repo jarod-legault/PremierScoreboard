@@ -62,7 +62,10 @@ function TeamsProvider({children}: TeamsProviderProps) {
     StorageKeys.VISITOR_BACKGROUND_COLOR,
   );
   const [visitorTextColor, setVisitorTextColor, visitorTextColorIsInitialized] =
-    usePersistentState<string>('hsl(0 0% 0%)', StorageKeys.VISITOR_TEXT_COLOR);
+    usePersistentState<string>(
+      'hsl(0 0% 100%)',
+      StorageKeys.VISITOR_TEXT_COLOR,
+    );
 
   const decrementHomeScore = () => {
     const prevScore = homeScore;
