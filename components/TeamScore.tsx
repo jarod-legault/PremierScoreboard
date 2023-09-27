@@ -9,6 +9,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import {useAppContext} from '../contexts/AppContext';
 import {useFirstRenderIsComplete} from '../hooks/useFirstRenderIsComplete';
 
 const ROTATE_DURATION_90_DEGREES = 130;
@@ -29,6 +30,8 @@ export function TeamScore(props: Props) {
   const [scoreContainerWidth, setScoreContainerWidth] = useState(0);
   const [currentScore, setCurrentScore] = useState(props.score);
 
+  const {touchIsEnabled, setTouchIsEnabled} = useAppContext();
+
   const nameRef = useRef<Text>(null);
   const scoreRef = useRef<Text>(null);
 
@@ -38,10 +41,12 @@ export function TeamScore(props: Props) {
   const rotateXRef = useRef(new Animated.Value(0));
 
   useEffect(() => {
+    setTouchIsEnabled(false);
+
     Animated.spring(translateX, {
       toValue: props.translateX,
       useNativeDriver: true,
-    }).start();
+    }).start(() => setTouchIsEnabled(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.translateX]);
 
@@ -116,15 +121,24 @@ export function TeamScore(props: Props) {
         duration: 0,
         easing: Easing.linear,
         useNativeDriver: true,
-      }).start();
+      }).start(() => setTouchIsEnabled(true));
     };
 
     if (firstRenderIsComplete) {
+      setTouchIsEnabled(false);
       props.score > currentScore ? rotateTo90() : rotateToNegative90();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.score]);
+
+  function handleIncrementScore() {
+    touchIsEnabled && props.onIncrement();
+  }
+
+  function handleDecrementScore() {
+    touchIsEnabled && props.onDecrement();
+  }
 
   let scoreFontSize: number;
   if (props.score < 100) {
@@ -193,8 +207,14 @@ export function TeamScore(props: Props) {
             </Text>
           )}
           <View style={styles.touchContainer}>
-            <Pressable style={styles.pressable} onPress={props.onIncrement} />
-            <Pressable style={styles.pressable} onPress={props.onDecrement} />
+            <Pressable
+              style={styles.pressable}
+              onPress={handleIncrementScore}
+            />
+            <Pressable
+              style={styles.pressable}
+              onPress={handleDecrementScore}
+            />
           </View>
         </Animated.View>
       </View>

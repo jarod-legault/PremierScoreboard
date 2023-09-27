@@ -8,6 +8,8 @@ type Value = {
   appBackgroundColor: string;
   setAppBackgroundColor: (newColor: string) => void;
   isInitialized: boolean;
+  touchIsEnabled: boolean;
+  setTouchIsEnabled: (newTouchIsEnabled: boolean) => void;
 };
 
 const AppContext = React.createContext<Value | undefined>(undefined);
@@ -23,11 +25,14 @@ function AppProvider({children}: AppProviderProps) {
   );
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const [touchIsEnabled, setTouchIsEnabled] = useState(true);
 
   const value: Value = {
     appBackgroundColor,
     setAppBackgroundColor,
     isInitialized,
+    touchIsEnabled,
+    setTouchIsEnabled,
   };
 
   useEffect(() => {
