@@ -24,6 +24,8 @@ interface Props extends ViewProps {
   onIncrement: () => void;
   onDecrement: () => void;
   onPressName: () => void;
+  onLongPressTop: () => void;
+  onLongPressBottom: () => void;
 }
 
 export function TeamScore(props: Props) {
@@ -210,10 +212,12 @@ export function TeamScore(props: Props) {
             <Pressable
               style={styles.pressable}
               onPress={handleIncrementScore}
+              onLongPress={props.onLongPressTop}
             />
             <Pressable
               style={styles.pressable}
               onPress={handleDecrementScore}
+              onLongPress={props.onLongPressBottom}
             />
           </View>
         </Animated.View>

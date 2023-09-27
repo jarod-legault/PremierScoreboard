@@ -1,11 +1,16 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
+import {PointsModal} from './PointsModal';
 import {SettingsModal} from './SettingsModal';
 import {TeamScore} from './TeamScore';
 
 export function Scoreboard() {
+  const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
+  const [pointsModalIsVisible, setPointsModalIsVisible] = useState(false);
+  const [isIncrement, setIsIncrement] = useState(false);
+
   const {appBackgroundColor} = useAppContext();
   const {
     homeIsOnLeft,
@@ -24,7 +29,36 @@ export function Scoreboard() {
     isInitialized,
   } = useTeamsContext();
 
-  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const handlePointSelectRef = useRef(incrementHomeScore);
+
+  function showHomePointsIncrementModal() {
+    setIsIncrement(true);
+    handlePointSelectRef.current = incrementHomeScore;
+    setPointsModalIsVisible(true);
+  }
+
+  function showHomePointsDecrementModal() {
+    setIsIncrement(false);
+    handlePointSelectRef.current = decrementHomeScore;
+    setPointsModalIsVisible(true);
+  }
+
+  function showVisitorPointsIncrementModal() {
+    setIsIncrement(true);
+    handlePointSelectRef.current = incrementVisitorScore;
+    setPointsModalIsVisible(true);
+  }
+
+  function showVisitorPointsDecrementModal() {
+    setIsIncrement(false);
+    handlePointSelectRef.current = decrementVisitorScore;
+    setPointsModalIsVisible(true);
+  }
+
+  function handlePointSelect(pointValue: number) {
+    handlePointSelectRef.current(pointValue);
+    setPointsModalIsVisible(false);
+  }
 
   const {width: screenWidth} = useWindowDimensions();
   const homeTranslateX = homeIsOnLeft ? 0 : screenWidth / 2;
@@ -42,7 +76,9 @@ export function Scoreboard() {
         translateX={homeTranslateX}
         onIncrement={incrementHomeScore}
         onDecrement={decrementHomeScore}
-        onPressName={() => setModalIsVisible(true)}
+        onPressName={() => setSettingsModalIsVisible(true)}
+        onLongPressTop={showHomePointsIncrementModal}
+        onLongPressBottom={showHomePointsDecrementModal}
       />
       <TeamScore
         backgroundColor={visitorBackgroundColor}
@@ -52,12 +88,20 @@ export function Scoreboard() {
         translateX={visitorTranslateX}
         onIncrement={incrementVisitorScore}
         onDecrement={decrementVisitorScore}
-        onPressName={() => setModalIsVisible(true)}
+        onPressName={() => setSettingsModalIsVisible(true)}
+        onLongPressTop={showVisitorPointsIncrementModal}
+        onLongPressBottom={showVisitorPointsDecrementModal}
       />
       <SettingsModal
-        visible={modalIsVisible}
-        onRequestCloseModal={() => setModalIsVisible(false)}
-        onRequestOpenModal={() => setModalIsVisible(true)}
+        visible={settingsModalIsVisible}
+        onRequestCloseModal={() => setSettingsModalIsVisible(false)}
+        onRequestOpenModal={() => setSettingsModalIsVisible(true)}
+      />
+      <PointsModal
+        visible={pointsModalIsVisible}
+        isIncrement={isIncrement}
+        onPointSelect={handlePointSelect}
+        onRequestCloseModal={() => setPointsModalIsVisible(false)}
       />
     </View>
   );

@@ -10,8 +10,8 @@ type Value = {
   homeName: string;
   setHomeName: (newName: string) => void;
   homeScore: number;
-  decrementHomeScore: () => void;
-  incrementHomeScore: () => void;
+  decrementHomeScore: (pointValue?: number) => void;
+  incrementHomeScore: (pointValue?: number) => void;
   setHomeScore: (newScore: number) => void;
   homeBackgroundColor: string;
   setHomeBackgroundColor: (newColor: string) => void;
@@ -20,8 +20,8 @@ type Value = {
   visitorName: string;
   setVisitorName: (newName: string) => void;
   visitorScore: number;
-  decrementVisitorScore: () => void;
-  incrementVisitorScore: () => void;
+  decrementVisitorScore: (pointValue?: number) => void;
+  incrementVisitorScore: (pointValue?: number) => void;
   setVisitorScore: (newScore: number) => void;
   visitorBackgroundColor: string;
   setVisitorBackgroundColor: (newColor: string) => void;
@@ -69,24 +69,24 @@ function TeamsProvider({children}: TeamsProviderProps) {
       StorageKeys.VISITOR_TEXT_COLOR,
     );
 
-  const decrementHomeScore = () => {
+  const decrementHomeScore = (pointValue = 1) => {
     const prevScore = homeScore;
-    setHomeScore(prevScore - 1);
+    setHomeScore(prevScore - pointValue);
   };
 
-  const incrementHomeScore = () => {
+  const incrementHomeScore = (pointValue = 1) => {
     const prevScore = homeScore;
-    setHomeScore(prevScore + 1);
+    setHomeScore(prevScore + pointValue);
   };
 
-  const decrementVisitorScore = () => {
+  const decrementVisitorScore = (pointValue = 1) => {
     const prevScore = visitorScore;
-    setVisitorScore(prevScore - 1);
+    setVisitorScore(prevScore - pointValue);
   };
 
-  const incrementVisitorScore = () => {
+  const incrementVisitorScore = (pointValue = 1) => {
     const prevScore = visitorScore;
-    setVisitorScore(prevScore + 1);
+    setVisitorScore(prevScore + pointValue);
   };
 
   const [isInitialized, setIsInitialized] = useState(false);
