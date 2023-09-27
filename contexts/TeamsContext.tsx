@@ -44,13 +44,13 @@ function TeamsProvider({children}: TeamsProviderProps) {
     setHomeBackgroundColor,
     homeBackgroundColorIsInitialized,
   ] = usePersistentState<string>(
-    'rgb(85, 85, 171)',
+    'hsl(270 100% 33%)',
     StorageKeys.HOME_BACKGROUND_COLOR,
   );
   const [homeTextColor, setHomeTextColor, homeTextColorIsInitialized] =
-    usePersistentState<string>('rgb(255, 255, 0)', StorageKeys.HOME_TEXT_COLOR);
+    usePersistentState<string>('hsl(60 80% 50%)', StorageKeys.HOME_TEXT_COLOR);
   const [visitorName, setVisitorName, visitorNameIsInitialized] =
-    usePersistentState<string>('Dolphins', StorageKeys.VISITOR_NAME);
+    usePersistentState<string>('Jets', StorageKeys.VISITOR_NAME);
   const [visitorScore, setVisitorScore, visitorScoreIsInitialized] =
     usePersistentState<number>(0, StorageKeys.VISITOR_SCORE);
   const [
@@ -58,14 +58,11 @@ function TeamsProvider({children}: TeamsProviderProps) {
     setVisitorBackgroundColor,
     visitorBackgroundColorIsInitialized,
   ] = usePersistentState<string>(
-    'rgb(43, 213, 213)',
+    'hsl(90 100% 17%)',
     StorageKeys.VISITOR_BACKGROUND_COLOR,
   );
   const [visitorTextColor, setVisitorTextColor, visitorTextColorIsInitialized] =
-    usePersistentState<string>(
-      'rgb(255, 85, 0)',
-      StorageKeys.VISITOR_TEXT_COLOR,
-    );
+    usePersistentState<string>('hsl(0 0% 0%)', StorageKeys.VISITOR_TEXT_COLOR);
 
   const decrementHomeScore = () => {
     const prevScore = homeScore;

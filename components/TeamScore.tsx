@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 100,
+    fontWeight: '500',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
