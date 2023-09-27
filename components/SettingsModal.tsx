@@ -85,9 +85,10 @@ export function SettingsModal(props: Props) {
   };
 
   const resetScores = () => {
+    setResetConfirmationIsVisible(false);
+    onRequestCloseModal();
     setHomeScore(0);
     setVisitorScore(0);
-    setResetConfirmationIsVisible(false);
   };
 
   const swapSides = () => {
