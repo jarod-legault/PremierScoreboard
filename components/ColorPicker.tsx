@@ -145,15 +145,15 @@ export function ColorPicker(props: Props) {
                 {
                   backgroundColor: new ColorTranslator(colorObject, {
                     decimals: 0,
-                  }).RGB,
+                  }).HSL,
                   borderWidth:
-                    new ColorTranslator(currentColorObject).RGB ===
-                    new ColorTranslator(colorObject).RGB
+                    new ColorTranslator(currentColorObject).HSL ===
+                    new ColorTranslator(colorObject).HSL
                       ? 2
                       : 1,
                   borderColor:
-                    new ColorTranslator(currentColorObject).RGB ===
-                    new ColorTranslator(colorObject).RGB
+                    new ColorTranslator(currentColorObject).HSL ===
+                    new ColorTranslator(colorObject).HSL
                       ? borderColorValue.interpolate({
                           inputRange: [0, 255],
                           outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
@@ -166,11 +166,7 @@ export function ColorPicker(props: Props) {
                   // }),
                 },
               ]}
-              onPress={() =>
-                setCurrentColorObject(
-                  new ColorTranslator(colorObject).HSLObject,
-                )
-              }
+              onPress={() => setCurrentColorObject(colorObject)}
             />
           ))}
         </View>
@@ -192,15 +188,16 @@ export function ColorPicker(props: Props) {
                     {
                       backgroundColor: new ColorTranslator(colorObject, {
                         decimals: 0,
-                      }).RGB,
-                      borderWidth: currentHue === colorObject.h ? 4 : 0,
-                      borderColor: 'black',
+                      }).HSL,
+                      borderWidth: currentHue === colorObject.h ? 4 : 1,
+                      borderColor:
+                        currentHue === colorObject.h ? 'black' : 'grey',
                       transform: [
                         {translateX},
                         {translateY},
                         {rotate: `${degrees}deg`},
-                        {perspective: 100},
-                        {rotateX: '-40deg'},
+                        // {perspective: 400},
+                        // {rotateX: '-55deg'},
                       ],
                     },
                   ]}
@@ -221,15 +218,15 @@ export function ColorPicker(props: Props) {
                           {
                             backgroundColor: new ColorTranslator(colorObject, {
                               decimals: 0,
-                            }).RGB,
+                            }).HSL,
                             borderWidth:
-                              new ColorTranslator(currentColorObject).RGB ===
-                              new ColorTranslator(colorObject).RGB
+                              new ColorTranslator(currentColorObject).HSL ===
+                              new ColorTranslator(colorObject).HSL
                                 ? 2
                                 : 1,
                             borderColor:
-                              new ColorTranslator(currentColorObject).RGB ===
-                              new ColorTranslator(colorObject).RGB
+                              new ColorTranslator(currentColorObject).HSL ===
+                              new ColorTranslator(colorObject).HSL
                                 ? borderColorValue.interpolate({
                                     inputRange: [0, 255],
                                     outputRange: [
@@ -241,11 +238,13 @@ export function ColorPicker(props: Props) {
                           },
                         ]}
                         // onPress={() => props.onColorPress(color)}
-                        onPress={() =>
-                          setCurrentColorObject(
-                            new ColorTranslator(colorObject).HSLObject,
-                          )
-                        }
+                        onPress={() => {
+                          console.log('currentColorObject:');
+                          console.log(currentColorObject);
+                          console.log('colorObject:');
+                          console.log(colorObject);
+                          setCurrentColorObject(colorObject);
+                        }}
                       />
                     ))}
                   </View>
@@ -274,11 +273,11 @@ export function ColorPicker(props: Props) {
         <Button
           mode="outlined"
           buttonColor={
-            new ColorTranslator(currentColorObject, {decimals: 0}).RGB
+            new ColorTranslator(currentColorObject, {decimals: 0}).HSL
           }
           onPress={() =>
             props.onColorSelect(
-              new ColorTranslator(currentColorObject, {decimals: 0}).RGB,
+              new ColorTranslator(currentColorObject, {decimals: 0}).HSL,
             )
           }>
           <Text
@@ -289,7 +288,7 @@ export function ColorPicker(props: Props) {
                   ? 'black'
                   : 'white',
               //   ColorTranslator.getHarmony(
-              //   new ColorTranslator(currentColorObject).RGB,
+              //   new ColorTranslator(currentColorObject).HSL,
               //   // Harmony.COMPLEMENTARY,
               // )[1],
             }}>
@@ -336,8 +335,8 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
   },
   hueColorContainer: {
-    height: 36,
-    aspectRatio: 1.8,
+    height: 30,
+    aspectRatio: 1.9,
     borderWidth: 1,
     borderColor: 'rgb(200,200,200)',
     position: 'absolute',
