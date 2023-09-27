@@ -1,74 +1,116 @@
-import React, {useEffect, useRef} from 'react';
-import {Animated, Pressable, StyleSheet, View, ViewProps} from 'react-native';
-import {Surface} from 'react-native-paper';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
+import {Button, Surface} from 'react-native-paper';
+import {ColorTranslator, HSLObject, Harmony} from 'colortranslator';
 
-const MIN_COLOR_WIDTH = 34;
-
-const allColors = [
-  ['rgb(255, 0, 0)', 'rgb(255, 85, 0)', 'rgb(255, 170, 0)', 'rgb(255, 255, 0)'],
-  [
-    'rgb(255, 0, 85)',
-    'rgb(213, 43, 43)',
-    'rgb(213, 128, 43)',
-    'rgb(213, 213, 43)',
-    'rgb(170, 255, 0)',
-  ],
-  [
-    'rgb(255, 0, 170)',
-    'rgb(213, 43, 128)',
-    'rgb(171, 85, 85)',
-    'rgb(171, 171, 85)',
-    'rgb(128, 213, 43)',
-    'rgb(85, 255, 0)',
-  ],
-  [
-    'rgb(255, 0, 255)',
-    'rgb(213, 43, 213)',
-    'rgb(171, 85, 171)',
-    'rgb(127, 127, 127)',
-    'rgb(85, 171, 85)',
-    'rgb(43, 213, 43)',
-    'rgb(0, 255, 0)',
-  ],
-  [
-    'rgb(170, 0, 255)',
-    'rgb(128, 43, 213)',
-    'rgb(85, 85, 171)',
-    'rgb(85, 171, 171)',
-    'rgb(43, 213, 128)',
-    'rgb(0, 255, 85)',
-  ],
-  [
-    'rgb(85, 0, 255)',
-    'rgb(43, 43, 213)',
-    'rgb(43, 128, 213)',
-    'rgb(43, 213, 213)',
-    'rgb(0, 255, 170)',
-  ],
-  ['rgb(0, 0, 255)', 'rgb(0, 85, 255)', 'rgb(0, 170, 255)', 'rgb(0, 255, 255)'],
-];
-
-const greys = [
-  'rgb(255,255,255)',
-  'rgb(192, 192, 192)',
-  'rgb(64, 64, 64)',
-  'rgb(0,0,0)',
-];
+const MIN_COLOR_WIDTH = 30;
+const NUMBER_OF_HUES = 12;
+const NUMBER_OF_GREYS = 5;
+const PALETTE_DIMENSION = 5;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface Props extends ViewProps {
-  currentColor: string;
-  onColorPress: (color: string) => void;
+  style?: ViewStyle;
+  previousColor: string;
+  onColorSelect: (color: string) => void;
+  onColorReject: () => void;
 }
 
 export function ColorPicker(props: Props) {
-  const {currentColor, style, ...restOfProps} = props;
+  const previousColorObject = new ColorTranslator(props.previousColor)
+    .HSLObject;
+  const [currentHue, setCurrentHue] = useState(previousColorObject.h);
+  const [currentColorObject, setCurrentColorObject] =
+    useState(previousColorObject);
 
-  const colorValue = useRef(new Animated.Value(0)).current;
+  function getGreys() {
+    const greys: Array<HSLObject> = [];
+    const greyLightnessIncrement = 100 / (NUMBER_OF_GREYS - 1);
+    let greyLightness = 0;
+    for (let i = 0; i < NUMBER_OF_GREYS; i++) {
+      greys.push({
+        h: 0,
+        s: 0,
+        l: Math.round(greyLightness),
+      });
+      greyLightness += greyLightnessIncrement;
+    }
+    return greys;
+  }
+
+  const greys = getGreys();
+
+  function getHues() {
+    const hues: Array<HSLObject> = [];
+    const hueIncrement = 360 / NUMBER_OF_HUES;
+    let hue = 0;
+    for (let i = 0; i < NUMBER_OF_HUES; i++) {
+      hues.push({
+        h: Math.round(hue),
+        s: 100,
+        l: 50,
+      });
+      hue += hueIncrement;
+    }
+    return hues;
+  }
+
+  const hues = getHues();
+
+  function getPalette() {
+    const pallette: Array<Array<HSLObject>> = [];
+    // FIXME: Round the values below
+    const saturationIncrement = 100 / PALETTE_DIMENSION;
+    const lightnessIncrement = 100 / (PALETTE_DIMENSION + 1);
+    let lightness = lightnessIncrement;
+    for (let i = 0; i < PALETTE_DIMENSION; i++) {
+      let saturation = saturationIncrement;
+      let saturations = [];
+      for (let j = 0; j < PALETTE_DIMENSION; j++) {
+        saturations.push({
+          h: Math.round(currentHue),
+          s: Math.round(saturation),
+          l: Math.round(lightness),
+        });
+        saturation += saturationIncrement;
+      }
+      pallette.push(saturations);
+      lightness += lightnessIncrement;
+    }
+    return pallette;
+  }
+
+  const palette = getPalette();
+
+  // s: we do not want 0
+  // increment is 100 / dimension
+  // 6: 16.7, 33.3, 50, 66.7, 83.3, 100
+
+  // l: we do not want 0 or 100, but we must have 50
+  // increment is 100 / (dimension + 1)
+  // 6: 14.3, 28.6, 42.9, 57.2, 71.5, 85.8
+
+  // hsl(360, 100%, 100%)
+
+  // hues:
+  // 6: 0, 60, 120, 180, 240, 300
+  // 12: 0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330
+  // 18: 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340
+  // 24: 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345
+
+  const borderColorValue = useRef(new Animated.Value(0)).current;
 
   const changeToBlack = () => {
-    Animated.timing(colorValue, {
+    Animated.timing(borderColorValue, {
       toValue: 0,
       duration: 500,
       useNativeDriver: true,
@@ -76,7 +118,7 @@ export function ColorPicker(props: Props) {
   };
 
   const changeToWhite = () => {
-    Animated.timing(colorValue, {
+    Animated.timing(borderColorValue, {
       toValue: 255,
       duration: 500,
       useNativeDriver: true,
@@ -88,72 +130,174 @@ export function ColorPicker(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TODO: Make all borders only 1 pixel wide.
+
   return (
-    <View style={style}>
-      <Surface style={styles.containerSurface} elevation={5}>
-        <View {...restOfProps} style={styles.container}>
-          <View style={styles.colorsContainer}>
-            {allColors.map((colorRow, i) => {
-              let translateY = (i * MIN_COLOR_WIDTH) / -9;
+    <Surface style={[props.style, styles.container]} elevation={5}>
+      <View style={styles.greysAndColors}>
+        <View style={styles.greys}>
+          {greys.map(colorObject => (
+            <AnimatedPressable
+              key={colorObject.l}
+              style={[
+                styles.colorContainer,
+                // eslint-disable-next-line react-native/no-inline-styles
+                {
+                  backgroundColor: new ColorTranslator(colorObject, {
+                    decimals: 0,
+                  }).RGB,
+                  borderWidth:
+                    new ColorTranslator(currentColorObject).RGB ===
+                    new ColorTranslator(colorObject).RGB
+                      ? 2
+                      : 1,
+                  borderColor:
+                    new ColorTranslator(currentColorObject).RGB ===
+                    new ColorTranslator(colorObject).RGB
+                      ? borderColorValue.interpolate({
+                          inputRange: [0, 255],
+                          outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
+                        })
+                      : 'rgb(200, 200, 200)',
+                  // borderWidth: currentColor === color ? 4 : 0,
+                  // borderColor: borderColorValue.interpolate({
+                  //   inputRange: [0, 255],
+                  //   outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
+                  // }),
+                },
+              ]}
+              onPress={() =>
+                setCurrentColorObject(
+                  new ColorTranslator(colorObject).HSLObject,
+                )
+              }
+            />
+          ))}
+        </View>
+        <View>
+          <View style={styles.hues}>
+            {hues.map((colorObject, i) => {
+              const degreeIncrement = 360 / hues.length;
+              const degrees = i * degreeIncrement;
+              const radians = (degrees / 360) * 2 * Math.PI;
+              const RADIUS = 120;
+              const translateX = RADIUS * Math.sin(radians);
+              const translateY = -1 * RADIUS * Math.cos(radians);
               return (
-                <View
-                  style={[styles.colorRow, {transform: [{translateY}]}]}
-                  key={colorRow[0]}>
-                  {colorRow.map(color => (
-                    <Surface
-                      key={color}
-                      style={styles.colorSurface}
-                      elevation={2}>
+                <AnimatedPressable
+                  key={colorObject.h}
+                  style={[
+                    styles.hueColorContainer,
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    {
+                      backgroundColor: new ColorTranslator(colorObject, {
+                        decimals: 0,
+                      }).RGB,
+                      borderWidth: currentHue === colorObject.h ? 4 : 0,
+                      borderColor: 'black',
+                      transform: [
+                        {translateX},
+                        {translateY},
+                        {rotate: `${degrees}deg`},
+                        {perspective: 100},
+                        {rotateX: '-40deg'},
+                      ],
+                    },
+                  ]}
+                  onPress={() => setCurrentHue(colorObject.h)}
+                />
+              );
+            })}
+            <View style={styles.paletteContainer}>
+              {palette.map(colorRow => {
+                return (
+                  <View style={styles.colorRow} key={colorRow[0].l}>
+                    {colorRow.map(colorObject => (
                       <AnimatedPressable
+                        key={colorObject.s}
                         style={[
                           styles.colorContainer,
                           // eslint-disable-next-line react-native/no-inline-styles
                           {
-                            backgroundColor: color,
-                            borderWidth: currentColor === color ? 4 : 0,
-                            borderColor: colorValue.interpolate({
-                              inputRange: [0, 255],
-                              outputRange: [
-                                'rgb(0, 0, 0)',
-                                'rgb(255, 255, 255)',
-                              ],
-                            }),
+                            backgroundColor: new ColorTranslator(colorObject, {
+                              decimals: 0,
+                            }).RGB,
+                            borderWidth:
+                              new ColorTranslator(currentColorObject).RGB ===
+                              new ColorTranslator(colorObject).RGB
+                                ? 2
+                                : 1,
+                            borderColor:
+                              new ColorTranslator(currentColorObject).RGB ===
+                              new ColorTranslator(colorObject).RGB
+                                ? borderColorValue.interpolate({
+                                    inputRange: [0, 255],
+                                    outputRange: [
+                                      'rgb(0, 0, 0)',
+                                      'rgb(255, 255, 255)',
+                                    ],
+                                  })
+                                : 'rgb(200, 200, 200)',
                           },
                         ]}
-                        onPress={() => props.onColorPress(color)}
+                        // onPress={() => props.onColorPress(color)}
+                        onPress={() =>
+                          setCurrentColorObject(
+                            new ColorTranslator(colorObject).HSLObject,
+                          )
+                        }
                       />
-                    </Surface>
-                  ))}
-                </View>
-              );
-            })}
-          </View>
-          <View style={styles.greysContainer}>
-            {greys.map(color => (
-              <View key={color} style={styles.greySurfaceContainer}>
-                <Surface style={[styles.colorSurface]} elevation={2}>
-                  <AnimatedPressable
-                    style={[
-                      styles.colorContainer,
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      {
-                        backgroundColor: color,
-                        borderWidth: currentColor === color ? 4 : 0,
-                        borderColor: colorValue.interpolate({
-                          inputRange: [0, 255],
-                          outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
-                        }),
-                      },
-                    ]}
-                    onPress={() => props.onColorPress(color)}
-                  />
-                </Surface>
-              </View>
-            ))}
+                    ))}
+                  </View>
+                );
+              })}
+            </View>
           </View>
         </View>
-      </Surface>
-    </View>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          mode="outlined"
+          buttonColor={props.previousColor}
+          onPress={props.onColorReject}>
+          <Text
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              color:
+                new ColorTranslator(props.previousColor).HSLObject.l > 50
+                  ? 'black'
+                  : 'white',
+            }}>
+            Previous Color
+          </Text>
+        </Button>
+        <Button
+          mode="outlined"
+          buttonColor={
+            new ColorTranslator(currentColorObject, {decimals: 0}).RGB
+          }
+          onPress={() =>
+            props.onColorSelect(
+              new ColorTranslator(currentColorObject, {decimals: 0}).RGB,
+            )
+          }>
+          <Text
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              color:
+                new ColorTranslator(currentColorObject).HSLObject.l >= 50
+                  ? 'black'
+                  : 'white',
+              //   ColorTranslator.getHarmony(
+              //   new ColorTranslator(currentColorObject).RGB,
+              //   // Harmony.COMPLEMENTARY,
+              // )[1],
+            }}>
+            New Color
+          </Text>
+        </Button>
+      </View>
+    </Surface>
   );
 }
 
@@ -162,35 +306,50 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   colorContainer: {
-    borderRadius: MIN_COLOR_WIDTH / 2,
-    aspectRatio: 1,
-  },
-  colorSurface: {
-    aspectRatio: 1,
     minWidth: MIN_COLOR_WIDTH,
-    borderRadius: MIN_COLOR_WIDTH / 2,
-    margin: 2,
+    aspectRatio: 1,
+    borderWidth: 1,
+    borderColor: 'rgb(200,200,200)',
   },
   container: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
+    alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 20,
-    paddingBottom: 0,
   },
-  containerSurface: {
-    borderRadius: 5,
-  },
-  colorsContainer: {
+  paletteContainer: {
     alignItems: 'center',
   },
-  greysContainer: {
-    alignSelf: 'center',
-    marginLeft: 10,
-    paddingBottom: MIN_COLOR_WIDTH,
+  greys: {
+    marginRight: 5,
   },
-  greySurfaceContainer: {
-    marginVertical: 2,
+  hues: {
+    // flexDirection: 'row',
+    // marginBottom: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 280,
+    aspectRatio: 1,
+    // borderWidth: 1,
+    // borderColor: 'red',
+  },
+  hueColorContainer: {
+    height: 36,
+    aspectRatio: 1.8,
+    borderWidth: 1,
+    borderColor: 'rgb(200,200,200)',
+    position: 'absolute',
+  },
+  buttonsContainer: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 5,
+  },
+  greysAndColors: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

@@ -238,9 +238,10 @@ export function SettingsModal(props: Props) {
         )}
         {colorPickerIsVisible && (
           <ColorPicker
-            onColorPress={handleColorPress}
+            onColorSelect={handleColorPress}
+            onColorReject={() => setColorPickerIsVisible(false)}
             style={styles.colorPicker}
-            currentColor={currentColor}
+            previousColor={currentColor}
           />
         )}
         {tipsAreVisible && (
