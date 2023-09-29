@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {Platform, StyleSheet, View, ViewStyle} from 'react-native';
 import {Button, Surface, Text} from 'react-native-paper';
 import {BulletPoint} from './BulletPoint';
 
@@ -18,7 +18,12 @@ export function Tips(props: Props) {
           <BulletPoint text="Tap on the top half or bottom half of a score to ⬆️ or ⬇️ the score." />
           <BulletPoint text="Long press on the top half or bottom half of a score to ⬆️ or ⬇️ the score by an amount greater than 1." />
         </View>
-        <Button onPress={props.onRequestClose}>Got it!</Button>
+        <Button
+          mode="elevated"
+          onPress={props.onRequestClose}
+          style={styles.button}>
+          <Text style={styles.buttonText}>Got it!</Text>
+        </Button>
       </Surface>
     </View>
   );
@@ -39,6 +44,7 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
   },
   header: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     fontSize: 36,
     fontWeight: 'bold',
     alignSelf: 'center',
@@ -46,5 +52,12 @@ const styles = StyleSheet.create({
   },
   tipsContainer: {
     alignItems: 'stretch',
+  },
+  button: {
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
   },
 });

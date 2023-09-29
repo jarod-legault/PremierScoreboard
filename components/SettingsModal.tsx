@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Modal, ModalProps, StyleSheet, View} from 'react-native';
+import {Modal, ModalProps, Platform, StyleSheet, View} from 'react-native';
 import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
@@ -115,11 +115,14 @@ export function SettingsModal(props: Props) {
               <TextInput
                 textColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
                 outlineColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
-                style={{
-                  backgroundColor: homeIsOnLeft
-                    ? homeBackgroundColor
-                    : visitorBackgroundColor,
-                }}
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: homeIsOnLeft
+                      ? homeBackgroundColor
+                      : visitorBackgroundColor,
+                  },
+                ]}
                 value={homeIsOnLeft ? homeName : visitorName}
                 mode="outlined"
                 dense
@@ -160,11 +163,14 @@ export function SettingsModal(props: Props) {
               <TextInput
                 textColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
                 outlineColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
-                style={{
-                  backgroundColor: homeIsOnLeft
-                    ? visitorBackgroundColor
-                    : homeBackgroundColor,
-                }}
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: homeIsOnLeft
+                      ? visitorBackgroundColor
+                      : homeBackgroundColor,
+                  },
+                ]}
                 value={homeIsOnLeft ? visitorName : homeName}
                 mode="outlined"
                 dense
@@ -244,6 +250,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   labelStyle: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     fontSize: DEFAULT_FONT_SIZE,
   },
   modal: {
@@ -273,6 +280,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   resetButtonText: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     fontSize: DEFAULT_FONT_SIZE,
   },
   resetConfirmation: {
@@ -292,6 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     alignSelf: 'center',
     marginVertical: 10,
     fontSize: 40,
@@ -299,5 +308,8 @@ const styles = StyleSheet.create({
   swapButton: {
     alignSelf: 'center',
     margin: -10,
+  },
+  textInput: {
+    fontSize: 20,
   },
 });

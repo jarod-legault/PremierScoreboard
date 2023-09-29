@@ -239,13 +239,16 @@ export function ColorPicker(props: Props) {
             buttonColor={props.previousColor}
             onPress={props.onColorReject}>
             <Text
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                color:
-                  new ColorTranslator(props.previousColor).HSLObject.l > 50
-                    ? 'black'
-                    : 'white',
-              }}>
+              style={[
+                styles.buttonText,
+                // eslint-disable-next-line react-native/no-inline-styles
+                {
+                  color:
+                    new ColorTranslator(props.previousColor).HSLObject.l > 50
+                      ? 'black'
+                      : 'white',
+                },
+              ]}>
               Previous Color
             </Text>
           </Button>
@@ -261,13 +264,16 @@ export function ColorPicker(props: Props) {
               )
             }>
             <Text
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                color:
-                  new ColorTranslator(currentColorObject).HSLObject.l >= 50
-                    ? 'black'
-                    : 'white',
-              }}>
+              style={[
+                styles.buttonText,
+                // eslint-disable-next-line react-native/no-inline-styles
+                {
+                  color:
+                    new ColorTranslator(currentColorObject).HSLObject.l >= 50
+                      ? 'black'
+                      : 'white',
+                },
+              ]}>
               New Color
             </Text>
           </Button>
@@ -326,5 +332,8 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     marginTop: 35,
+  },
+  buttonText: {
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
   },
 });
