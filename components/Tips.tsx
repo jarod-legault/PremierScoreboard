@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'center',
-    marginTop: 10,
+    marginVertical: 10,
   },
   buttonText: {
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
