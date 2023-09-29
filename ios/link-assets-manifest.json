@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/ArchivoBlack-Regular.ttf",
+      "sha1": "5b6c44432da2e1330ad30153eddf98c739013b88"
+    },
+    {
+      "path": "assets/fonts/Arvo-Bold.ttf",
+      "sha1": "0f5c7895d87238a42e7e1e15396bb46591063a65"
+    },
+    {
+      "path": "assets/fonts/Arvo-BoldItalic.ttf",
+      "sha1": "70c487c81a8cd53165d4d41abdcfa35dbc9eb7cd"
+    },
+    {
+      "path": "assets/fonts/Arvo-Italic.ttf",
+      "sha1": "a06e1dda1e20a7a289a943ec45db074db1dfacf2"
+    },
+    {
+      "path": "assets/fonts/Arvo-Regular.ttf",
+      "sha1": "3857248afcedf01b6e9dc0048f4ca662bc328493"
+    }
+  ]
+}

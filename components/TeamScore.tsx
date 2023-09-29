@@ -3,6 +3,7 @@ import {
   Animated,
   Easing,
   LayoutChangeEvent,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 100,
-    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     includeFontPadding: false,
     textAlignVertical: 'center',
   },
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
     borderWidth: 10,
   },
   score: {
-    fontWeight: '400',
+    fontFamily: 'Arvo-Bold',
     includeFontPadding: false,
   },
   touchContainer: {
