@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {StorageKeys} from '../enums/StorageKeys';
-import {usePersistentState} from '../hooks/usePersistentState';
+import {useState} from 'react';
 
 type AppProviderProps = {children: React.ReactNode};
 type Value = {
-  appBackgroundColor: string;
-  setAppBackgroundColor: (newColor: string) => void;
-  isInitialized: boolean;
   touchIsEnabled: boolean;
   setTouchIsEnabled: (newTouchIsEnabled: boolean) => void;
 };
@@ -15,29 +10,12 @@ type Value = {
 const AppContext = React.createContext<Value | undefined>(undefined);
 
 function AppProvider({children}: AppProviderProps) {
-  const [
-    appBackgroundColor,
-    setAppBackgroundColor,
-    appBackgroundColorIsInitialized,
-  ] = usePersistentState<string>(
-    'rgb(192, 192, 192)',
-    StorageKeys.APP_BACKGROUND_COLOR,
-  );
-
-  const [isInitialized, setIsInitialized] = useState(false);
   const [touchIsEnabled, setTouchIsEnabled] = useState(true);
 
   const value: Value = {
-    appBackgroundColor,
-    setAppBackgroundColor,
-    isInitialized,
     touchIsEnabled,
     setTouchIsEnabled,
   };
-
-  useEffect(() => {
-    setIsInitialized(appBackgroundColorIsInitialized);
-  }, [appBackgroundColorIsInitialized]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

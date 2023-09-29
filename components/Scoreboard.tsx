@@ -1,17 +1,25 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import {useAppContext} from '../contexts/AppContext';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {PointsModal} from './PointsModal';
 import {SettingsModal} from './SettingsModal';
 import {TeamScore} from './TeamScore';
+import LinearGradient from 'react-native-linear-gradient';
+
+const LIGHT_GREY_LEVEL = 210;
+const DARK_GREY_LEVEL = 100;
+
+const backgroundGradientColors = [
+  `rgb(${DARK_GREY_LEVEL}, ${DARK_GREY_LEVEL}, ${DARK_GREY_LEVEL})`,
+  `rgb(${LIGHT_GREY_LEVEL}, ${LIGHT_GREY_LEVEL}, ${LIGHT_GREY_LEVEL})`,
+  `rgb(${DARK_GREY_LEVEL}, ${DARK_GREY_LEVEL}, ${DARK_GREY_LEVEL})`,
+];
 
 export function Scoreboard() {
   const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
   const [pointsModalIsVisible, setPointsModalIsVisible] = useState(false);
   const [isIncrement, setIsIncrement] = useState(false);
 
-  const {appBackgroundColor} = useAppContext();
   const {
     homeIsOnLeft,
     homeName,
@@ -67,7 +75,11 @@ export function Scoreboard() {
   if (!isInitialized) return null;
 
   return (
-    <View style={[styles.container, {backgroundColor: appBackgroundColor}]}>
+    <LinearGradient
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}
+      colors={backgroundGradientColors}
+      style={[styles.container]}>
       <TeamScore
         backgroundColor={homeBackgroundColor}
         textColor={homeTextColor}
@@ -103,7 +115,7 @@ export function Scoreboard() {
         onPointSelect={handlePointSelect}
         onRequestCloseModal={() => setPointsModalIsVisible(false)}
       />
-    </View>
+    </LinearGradient>
   );
 }
 

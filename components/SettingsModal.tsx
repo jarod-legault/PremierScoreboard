@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Modal, ModalProps, StyleSheet, View} from 'react-native';
 import {Button, IconButton, Text, TextInput} from 'react-native-paper';
-import {useAppContext} from '../contexts/AppContext';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
@@ -24,7 +23,6 @@ export function SettingsModal(props: Props) {
   const [resetConfirmationIsVisible, setResetConfirmationIsVisible] =
     useState(false);
 
-  const {appBackgroundColor, setAppBackgroundColor} = useAppContext();
   const {
     homeIsOnLeft,
     setHomeIsOnLeft,
@@ -73,12 +71,6 @@ export function SettingsModal(props: Props) {
     setColorRef.current = setVisitorTextColor;
   };
 
-  const handleAppBackgroundColorPress = () => {
-    setColorPickerIsVisible(true);
-    setCurrentColor(appBackgroundColor);
-    setColorRef.current = setAppBackgroundColor;
-  };
-
   const handleColorPress = (newColor: string) => {
     setColorPickerIsVisible(false);
     setColorRef.current(newColor);
@@ -119,11 +111,7 @@ export function SettingsModal(props: Props) {
             onPress={onRequestCloseModal}
           />
           <View style={styles.teamsContainer}>
-            <View
-              style={[
-                styles.teamContainer,
-                {backgroundColor: appBackgroundColor},
-              ]}>
+            <View style={styles.teamContainer}>
               <TextInput
                 textColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
                 outlineColor={homeIsOnLeft ? homeTextColor : visitorTextColor}
@@ -168,11 +156,7 @@ export function SettingsModal(props: Props) {
               style={styles.swapButton}
               onPress={swapSides}
             />
-            <View
-              style={[
-                styles.teamContainer,
-                {backgroundColor: appBackgroundColor},
-              ]}>
+            <View style={styles.teamContainer}>
               <TextInput
                 textColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
                 outlineColor={homeIsOnLeft ? visitorTextColor : homeTextColor}
@@ -213,13 +197,6 @@ export function SettingsModal(props: Props) {
             </View>
           </View>
           <View style={styles.bottomContainer}>
-            <ColorPickerButton
-              label="App background"
-              labelStyle={styles.labelStyle}
-              style={styles.appBackgroundColorPicker}
-              color={appBackgroundColor}
-              onPress={handleAppBackgroundColorPress}
-            />
             <Button
               mode="elevated"
               onPress={() => setResetConfirmationIsVisible(true)}>
@@ -254,9 +231,6 @@ export function SettingsModal(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  appBackgroundColorPicker: {
-    marginBottom: 20,
-  },
   background: {
     flex: 1,
     alignItems: 'center',
@@ -305,6 +279,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   teamContainer: {
+    backgroundColor: 'rgb(220, 220, 220)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
