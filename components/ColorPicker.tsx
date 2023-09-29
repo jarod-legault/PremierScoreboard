@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -325,6 +326,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     marginLeft: 10,
     justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 5,
   },
   bottomButton: {
@@ -335,5 +337,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
+    fontSize: 16,
   },
 });
