@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 5,
-    maxWidth: '75%',
+    maxWidth: 600,
   },
   closeButton: {
     position: 'absolute',
