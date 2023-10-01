@@ -92,7 +92,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
   },
-  pointPressable: {},
+  pointPressable: {
+    flex: 1,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     fontSize: 25,
   },
