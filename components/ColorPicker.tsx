@@ -9,7 +9,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import {Button, Surface} from 'react-native-paper';
+import {Button, IconButton, Surface} from 'react-native-paper';
 import {ColorTranslator, HSLObject} from 'colortranslator';
 
 const MIN_COLOR_WIDTH = 30;
@@ -126,6 +126,12 @@ export function ColorPicker(props: Props) {
 
   return (
     <Surface style={[props.style, styles.container]} elevation={5}>
+      <IconButton
+        style={styles.closeButton}
+        size={30}
+        icon="close-box"
+        onPress={props.onColorReject}
+      />
       <View style={styles.huesAndPalette}>
         {hues.map((colorObject, i) => {
           const degreeIncrement = 360 / hues.length;
@@ -301,6 +307,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 20,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   paletteContainer: {
     alignItems: 'center',
