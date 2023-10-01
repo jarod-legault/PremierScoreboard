@@ -22,25 +22,29 @@ export function Confirmation(props: Props) {
         </Dialog.Content>
       )}
       <View style={styles.buttonContainer}>
-        <Dialog.Actions>
-          <Button onPress={props.onRequestClose}>{props.cancelText}</Button>
-        </Dialog.Actions>
-        <Dialog.Actions>
-          <Button onPress={props.onConfirm}>{props.confirmText}</Button>
-        </Dialog.Actions>
+        <Button mode="elevated" onPress={props.onRequestClose}>
+          {props.cancelText}
+        </Button>
+        <Button mode="elevated" onPress={props.onConfirm}>
+          {props.confirmText}
+        </Button>
       </View>
     </Surface>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: 'row',
-  },
   container: {
+    alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: 'white',
+    minWidth: 250,
     borderRadius: 5,
     padding: 20,
+  },
+  buttonContainer: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
