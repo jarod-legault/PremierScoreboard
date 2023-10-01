@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 20,
   },
   textContainer: {
     flexDirection: 'row',
   },
   text: {
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
-    fontSize: 16,
+    fontSize: 18,
     flexShrink: 1,
     marginHorizontal: 6,
   },

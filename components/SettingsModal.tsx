@@ -228,9 +228,7 @@ export function SettingsModal(props: Props) {
             previousColor={currentColor}
           />
         )}
-        {tipsAreVisible && (
-          <Tips style={styles.tips} onRequestClose={hideTips} />
-        )}
+        {tipsAreVisible && <Tips onRequestClose={hideTips} />}
       </View>
     </Modal>
   );
@@ -274,9 +272,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   colorPicker: {
-    position: 'absolute',
-  },
-  tips: {
     position: 'absolute',
   },
   resetButtonText: {
