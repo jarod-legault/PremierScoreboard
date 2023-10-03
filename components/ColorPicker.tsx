@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewProps,
 } from 'react-native';
 import {Button, IconButton, Surface} from 'react-native-paper';
 import {ColorTranslator, HSLObject} from 'colortranslator';

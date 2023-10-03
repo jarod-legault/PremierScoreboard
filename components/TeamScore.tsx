@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   scoreContainer: {
     height: '90%',
-    width: '83%',
+    width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,

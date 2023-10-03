@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {LayoutChangeEvent, SafeAreaView, StyleSheet, View} from 'react-native';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {PointsModal} from './PointsModal';
 import {SettingsModal} from './SettingsModal';
@@ -19,6 +19,7 @@ export function Scoreboard() {
   const [settingsModalIsVisible, setSettingsModalIsVisible] = useState(false);
   const [pointsModalIsVisible, setPointsModalIsVisible] = useState(false);
   const [isIncrement, setIsIncrement] = useState(false);
+  const [safeAreaWidth, setSafeAreaWidth] = useState<number>();
 
   const {
     homeIsOnLeft,
@@ -68,9 +69,12 @@ export function Scoreboard() {
     setPointsModalIsVisible(false);
   }
 
-  const {width: screenWidth} = useWindowDimensions();
-  const homeTranslateX = homeIsOnLeft ? 0 : screenWidth / 2;
-  const visitorTranslateX = homeIsOnLeft ? 0 : screenWidth / -2;
+  let homeTranslateX = 0;
+  let visitorTranslateX = 0;
+  if (safeAreaWidth) {
+    homeTranslateX = homeIsOnLeft ? 0 : safeAreaWidth / 2;
+    visitorTranslateX = homeIsOnLeft ? 0 : safeAreaWidth / -2;
+  }
 
   if (!isInitialized) return null;
 
@@ -80,47 +84,65 @@ export function Scoreboard() {
       end={{x: 1, y: 0}}
       colors={backgroundGradientColors}
       style={[styles.container]}>
-      <TeamScore
-        backgroundColor={homeBackgroundColor}
-        textColor={homeTextColor}
-        name={homeName}
-        score={homeScore}
-        translateX={homeTranslateX}
-        onIncrement={incrementHomeScore}
-        onDecrement={decrementHomeScore}
-        onPressName={() => setSettingsModalIsVisible(true)}
-        onLongPressTop={showHomePointsIncrementModal}
-        onLongPressBottom={showHomePointsDecrementModal}
-      />
-      <TeamScore
-        backgroundColor={visitorBackgroundColor}
-        textColor={visitorTextColor}
-        name={visitorName}
-        score={visitorScore}
-        translateX={visitorTranslateX}
-        onIncrement={incrementVisitorScore}
-        onDecrement={decrementVisitorScore}
-        onPressName={() => setSettingsModalIsVisible(true)}
-        onLongPressTop={showVisitorPointsIncrementModal}
-        onLongPressBottom={showVisitorPointsDecrementModal}
-      />
-      <SettingsModal
-        visible={settingsModalIsVisible}
-        onRequestCloseModal={() => setSettingsModalIsVisible(false)}
-        onRequestOpenModal={() => setSettingsModalIsVisible(true)}
-      />
-      <PointsModal
-        visible={pointsModalIsVisible}
-        isIncrement={isIncrement}
-        onPointSelect={handlePointSelect}
-        onRequestCloseModal={() => setPointsModalIsVisible(false)}
-      />
+      <SafeAreaView style={styles.safeArea}>
+        <View
+          style={styles.innerSafeArea}
+          onLayout={(event: LayoutChangeEvent) => {
+            setSafeAreaWidth(event.nativeEvent.layout.width);
+          }}>
+          {safeAreaWidth && (
+            <>
+              <TeamScore
+                backgroundColor={homeBackgroundColor}
+                textColor={homeTextColor}
+                name={homeName}
+                score={homeScore}
+                translateX={homeTranslateX}
+                onIncrement={incrementHomeScore}
+                onDecrement={decrementHomeScore}
+                onPressName={() => setSettingsModalIsVisible(true)}
+                onLongPressTop={showHomePointsIncrementModal}
+                onLongPressBottom={showHomePointsDecrementModal}
+              />
+              <TeamScore
+                backgroundColor={visitorBackgroundColor}
+                textColor={visitorTextColor}
+                name={visitorName}
+                score={visitorScore}
+                translateX={visitorTranslateX}
+                onIncrement={incrementVisitorScore}
+                onDecrement={decrementVisitorScore}
+                onPressName={() => setSettingsModalIsVisible(true)}
+                onLongPressTop={showVisitorPointsIncrementModal}
+                onLongPressBottom={showVisitorPointsDecrementModal}
+              />
+            </>
+          )}
+          <SettingsModal
+            visible={settingsModalIsVisible}
+            onRequestCloseModal={() => setSettingsModalIsVisible(false)}
+            onRequestOpenModal={() => setSettingsModalIsVisible(true)}
+          />
+          <PointsModal
+            visible={pointsModalIsVisible}
+            isIncrement={isIncrement}
+            onPointSelect={handlePointSelect}
+            onRequestCloseModal={() => setPointsModalIsVisible(false)}
+          />
+        </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  innerSafeArea: {
     flex: 1,
     flexDirection: 'row',
   },
