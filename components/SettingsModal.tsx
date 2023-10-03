@@ -224,7 +224,6 @@ export function SettingsModal(props: Props) {
           <ColorPicker
             onColorSelect={handleColorPress}
             onColorReject={() => setColorPickerIsVisible(false)}
-            style={styles.colorPicker}
             previousColor={currentColor}
           />
         )}
@@ -270,9 +269,6 @@ const styles = StyleSheet.create({
   },
   colorsContainer: {
     alignItems: 'flex-end',
-  },
-  colorPicker: {
-    position: 'absolute',
   },
   resetButtonText: {
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',

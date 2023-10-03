@@ -7,7 +7,6 @@ import {
   Text,
   View,
   ViewProps,
-  ViewStyle,
 } from 'react-native';
 import {Button, IconButton, Surface} from 'react-native-paper';
 import {ColorTranslator, HSLObject} from 'colortranslator';
@@ -19,12 +18,11 @@ const PALETTE_DIMENSION = 5;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-interface Props extends ViewProps {
-  style?: ViewStyle;
+type Props = {
   previousColor: string;
   onColorSelect: (color: string) => void;
   onColorReject: () => void;
-}
+};
 
 export function ColorPicker(props: Props) {
   const previousColorObject = new ColorTranslator(props.previousColor)
@@ -125,172 +123,185 @@ export function ColorPicker(props: Props) {
   }, []);
 
   return (
-    <Surface style={[props.style, styles.container]} elevation={5}>
-      <IconButton
-        style={styles.closeButton}
-        size={30}
-        icon="close-box"
-        onPress={props.onColorReject}
-      />
-      <View style={styles.huesAndPalette}>
-        {hues.map((colorObject, i) => {
-          const degreeIncrement = 360 / hues.length;
-          const degrees = i * degreeIncrement;
-          const radians = (degrees / 360) * 2 * Math.PI;
-          const RADIUS = 120;
-          const translateX = RADIUS * Math.sin(radians);
-          const translateY = -1 * RADIUS * Math.cos(radians);
-          return (
-            <AnimatedPressable
-              key={colorObject.h}
-              style={[
-                styles.hue,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  backgroundColor: new ColorTranslator(colorObject, {
-                    decimals: 0,
-                  }).HSL,
-                  borderWidth: currentHue === colorObject.h ? 4 : 1,
-                  borderColor: currentHue === colorObject.h ? 'black' : 'grey',
-                  transform: [
-                    {translateX},
-                    {translateY},
-                    {rotate: `${degrees}deg`},
-                  ],
-                },
-              ]}
-              onPress={() => setCurrentHue(colorObject.h)}
-            />
-          );
-        })}
-        <View style={styles.paletteContainer}>
-          {palette.map(colorRow => {
+    <View style={styles.background}>
+      <Surface style={styles.container} elevation={5}>
+        <IconButton
+          style={styles.closeButton}
+          size={30}
+          icon="close-box"
+          onPress={props.onColorReject}
+        />
+        <View style={styles.huesAndPalette}>
+          {hues.map((colorObject, i) => {
+            const degreeIncrement = 360 / hues.length;
+            const degrees = i * degreeIncrement;
+            const radians = (degrees / 360) * 2 * Math.PI;
+            const RADIUS = 120;
+            const translateX = RADIUS * Math.sin(radians);
+            const translateY = -1 * RADIUS * Math.cos(radians);
             return (
-              <View style={styles.colorRow} key={colorRow[0].l}>
-                {colorRow.map(colorObject => (
-                  <AnimatedPressable
-                    key={colorObject.s}
-                    style={[
-                      styles.colorBox,
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      {
-                        backgroundColor: new ColorTranslator(colorObject, {
-                          decimals: 0,
-                        }).HSL,
-                        borderWidth:
-                          new ColorTranslator(currentColorObject).HSL ===
-                          new ColorTranslator(colorObject).HSL
-                            ? 2
-                            : 1,
-                        borderColor:
-                          new ColorTranslator(currentColorObject).HSL ===
-                          new ColorTranslator(colorObject).HSL
-                            ? borderColorValue.interpolate({
-                                inputRange: [0, 255],
-                                outputRange: [
-                                  'rgb(0, 0, 0)',
-                                  'rgb(255, 255, 255)',
-                                ],
-                              })
-                            : 'grey',
-                      },
-                    ]}
-                    onPress={() => {
-                      console.log(new ColorTranslator(colorObject).HSL);
-                      setCurrentColorObject(colorObject);
-                    }}
-                  />
-                ))}
-              </View>
+              <AnimatedPressable
+                key={colorObject.h}
+                style={[
+                  styles.hue,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    backgroundColor: new ColorTranslator(colorObject, {
+                      decimals: 0,
+                    }).HSL,
+                    borderWidth: currentHue === colorObject.h ? 4 : 1,
+                    borderColor:
+                      currentHue === colorObject.h ? 'black' : 'grey',
+                    transform: [
+                      {translateX},
+                      {translateY},
+                      {rotate: `${degrees}deg`},
+                    ],
+                  },
+                ]}
+                onPress={() => setCurrentHue(colorObject.h)}
+              />
             );
           })}
+          <View style={styles.paletteContainer}>
+            {palette.map(colorRow => {
+              return (
+                <View style={styles.colorRow} key={colorRow[0].l}>
+                  {colorRow.map(colorObject => (
+                    <AnimatedPressable
+                      key={colorObject.s}
+                      style={[
+                        styles.colorBox,
+                        // eslint-disable-next-line react-native/no-inline-styles
+                        {
+                          backgroundColor: new ColorTranslator(colorObject, {
+                            decimals: 0,
+                          }).HSL,
+                          borderWidth:
+                            new ColorTranslator(currentColorObject).HSL ===
+                            new ColorTranslator(colorObject).HSL
+                              ? 2
+                              : 1,
+                          borderColor:
+                            new ColorTranslator(currentColorObject).HSL ===
+                            new ColorTranslator(colorObject).HSL
+                              ? borderColorValue.interpolate({
+                                  inputRange: [0, 255],
+                                  outputRange: [
+                                    'rgb(0, 0, 0)',
+                                    'rgb(255, 255, 255)',
+                                  ],
+                                })
+                              : 'grey',
+                        },
+                      ]}
+                      onPress={() => {
+                        console.log(new ColorTranslator(colorObject).HSL);
+                        setCurrentColorObject(colorObject);
+                      }}
+                    />
+                  ))}
+                </View>
+              );
+            })}
+          </View>
         </View>
-      </View>
-      <View style={styles.greysAndButtonsContainer}>
-        <View style={styles.greysContainer}>
-          {greys.map(colorObject => (
-            <AnimatedPressable
-              key={colorObject.l}
-              style={[
-                styles.colorBox,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  backgroundColor: new ColorTranslator(colorObject, {
-                    decimals: 0,
-                  }).HSL,
-                  borderWidth:
-                    new ColorTranslator(currentColorObject).HSL ===
-                    new ColorTranslator(colorObject).HSL
-                      ? 2
-                      : 1,
-                  borderColor:
-                    new ColorTranslator(currentColorObject).HSL ===
-                    new ColorTranslator(colorObject).HSL
-                      ? borderColorValue.interpolate({
-                          inputRange: [0, 255],
-                          outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
-                        })
-                      : 'grey',
-                },
-              ]}
-              onPress={() => {
-                console.log(new ColorTranslator(colorObject).HSL);
-                setCurrentColorObject(colorObject);
-              }}
-            />
-          ))}
+        <View style={styles.greysAndButtonsContainer}>
+          <View style={styles.greysContainer}>
+            {greys.map(colorObject => (
+              <AnimatedPressable
+                key={colorObject.l}
+                style={[
+                  styles.colorBox,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    backgroundColor: new ColorTranslator(colorObject, {
+                      decimals: 0,
+                    }).HSL,
+                    borderWidth:
+                      new ColorTranslator(currentColorObject).HSL ===
+                      new ColorTranslator(colorObject).HSL
+                        ? 2
+                        : 1,
+                    borderColor:
+                      new ColorTranslator(currentColorObject).HSL ===
+                      new ColorTranslator(colorObject).HSL
+                        ? borderColorValue.interpolate({
+                            inputRange: [0, 255],
+                            outputRange: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'],
+                          })
+                        : 'grey',
+                  },
+                ]}
+                onPress={() => {
+                  console.log(new ColorTranslator(colorObject).HSL);
+                  setCurrentColorObject(colorObject);
+                }}
+              />
+            ))}
+          </View>
+          <View style={styles.buttonsContainer}>
+            <Button
+              mode="elevated"
+              buttonColor={props.previousColor}
+              onPress={props.onColorReject}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    color:
+                      new ColorTranslator(props.previousColor).HSLObject.l > 50
+                        ? 'black'
+                        : 'white',
+                  },
+                ]}>
+                Previous Color
+              </Text>
+            </Button>
+            <Button
+              style={styles.bottomButton}
+              mode="elevated"
+              buttonColor={
+                new ColorTranslator(currentColorObject, {decimals: 0}).HSL
+              }
+              onPress={() =>
+                props.onColorSelect(
+                  new ColorTranslator(currentColorObject, {decimals: 0}).HSL,
+                )
+              }>
+              <Text
+                style={[
+                  styles.buttonText,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    color:
+                      new ColorTranslator(currentColorObject).HSLObject.l >= 50
+                        ? 'black'
+                        : 'white',
+                  },
+                ]}>
+                New Color
+              </Text>
+            </Button>
+          </View>
         </View>
-        <View style={styles.buttonsContainer}>
-          <Button
-            mode="elevated"
-            buttonColor={props.previousColor}
-            onPress={props.onColorReject}>
-            <Text
-              style={[
-                styles.buttonText,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  color:
-                    new ColorTranslator(props.previousColor).HSLObject.l > 50
-                      ? 'black'
-                      : 'white',
-                },
-              ]}>
-              Previous Color
-            </Text>
-          </Button>
-          <Button
-            style={styles.bottomButton}
-            mode="elevated"
-            buttonColor={
-              new ColorTranslator(currentColorObject, {decimals: 0}).HSL
-            }
-            onPress={() =>
-              props.onColorSelect(
-                new ColorTranslator(currentColorObject, {decimals: 0}).HSL,
-              )
-            }>
-            <Text
-              style={[
-                styles.buttonText,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  color:
-                    new ColorTranslator(currentColorObject).HSLObject.l >= 50
-                      ? 'black'
-                      : 'white',
-                },
-              ]}>
-              New Color
-            </Text>
-          </Button>
-        </View>
-      </View>
-    </Surface>
+      </Surface>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+  },
   colorRow: {
     flexDirection: 'row',
   },
