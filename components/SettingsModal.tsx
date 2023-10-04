@@ -98,18 +98,6 @@ export function SettingsModal(props: Props) {
       <View style={styles.background}>
         <View style={styles.settingsContainer}>
           <Text style={styles.title}>Settings</Text>
-          <IconButton
-            style={styles.tipsButton}
-            size={30}
-            icon="help-box"
-            onPress={showTips}
-          />
-          <IconButton
-            style={styles.closeButton}
-            size={30}
-            icon="close-box"
-            onPress={onRequestCloseModal}
-          />
           <View style={styles.teamsContainer}>
             <View style={styles.teamContainer}>
               <TextInput
@@ -209,6 +197,18 @@ export function SettingsModal(props: Props) {
               <Text style={styles.resetButtonText}>Reset scores</Text>
             </Button>
           </View>
+          <IconButton
+            style={styles.tipsButton}
+            size={30}
+            icon="help-box"
+            onPress={showTips}
+          />
+          <IconButton
+            style={styles.closeButton}
+            size={30}
+            icon="close-box"
+            onPress={onRequestCloseModal}
+          />
         </View>
         {resetConfirmationIsVisible && (
           <Confirmation

@@ -11,18 +11,18 @@ export function Tips(props: Props) {
   return (
     <View style={styles.background}>
       <Surface style={styles.surface}>
-        <IconButton
-          style={styles.closeButton}
-          size={30}
-          icon="close-box"
-          onPress={props.onRequestClose}
-        />
         <Text style={styles.header}>Tips</Text>
         <View style={styles.tipsContainer}>
           <BulletPoint text="Tap on either team name to go to the settings screen." />
           <BulletPoint text="Tap on the top half or bottom half of a score to ⬆️ or ⬇️ the score." />
           <BulletPoint text="Long press on the top half or bottom half of a score to ⬆️ or ⬇️ the score by an amount greater than 1." />
         </View>
+        <IconButton
+          style={styles.closeButton}
+          size={30}
+          icon="close-box"
+          onPress={props.onRequestClose}
+        />
       </Surface>
     </View>
   );

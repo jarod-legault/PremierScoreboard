@@ -124,12 +124,6 @@ export function ColorPicker(props: Props) {
   return (
     <View style={styles.background}>
       <Surface style={styles.container} elevation={5}>
-        <IconButton
-          style={styles.closeButton}
-          size={30}
-          icon="close-box"
-          onPress={props.onColorReject}
-        />
         <View style={styles.huesAndPalette}>
           {hues.map((colorObject, i) => {
             const degreeIncrement = 360 / hues.length;
@@ -285,6 +279,12 @@ export function ColorPicker(props: Props) {
             </Button>
           </View>
         </View>
+        <IconButton
+          style={styles.closeButton}
+          size={30}
+          icon="close-box"
+          onPress={props.onColorReject}
+        />
       </Surface>
     </View>
   );
