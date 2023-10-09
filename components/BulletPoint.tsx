@@ -10,7 +10,12 @@ type Props = {
 export function BulletPoint(props: Props) {
   return (
     <View style={styles.row}>
-      <Icon name="check-circle-outline" size={22} style={styles.icon} />
+      <Icon
+        testID="bulletIcon"
+        name="check-circle-outline"
+        size={22}
+        style={styles.icon}
+      />
       <View style={styles.textContainer}>
         <Text style={styles.text}>{props.text}</Text>
       </View>

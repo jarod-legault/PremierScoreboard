@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {useState} from 'react';
 
+export const INITIAL_TOUCH_IS_ENABLED = true;
+
 type AppProviderProps = {children: React.ReactNode};
 type Value = {
   touchIsEnabled: boolean;
@@ -10,7 +12,9 @@ type Value = {
 const AppContext = React.createContext<Value | undefined>(undefined);
 
 function AppProvider({children}: AppProviderProps) {
-  const [touchIsEnabled, setTouchIsEnabled] = useState(true);
+  const [touchIsEnabled, setTouchIsEnabled] = useState(
+    INITIAL_TOUCH_IS_ENABLED,
+  );
 
   const value: Value = {
     touchIsEnabled,
