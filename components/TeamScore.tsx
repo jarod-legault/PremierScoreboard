@@ -18,6 +18,7 @@ const NAME_WIDTH_RATIO_UPPER_LIMIT = 0.72;
 const NAME_WIDTH_RATIO_LOWER_LIMIT = 0.62;
 const NAME_HEIGHT_RATIO_UPPER_LIMIT = 0.83;
 const NAME_HEIGHT_RATIO_LOWER_LIMIT = 0.73;
+const RENDER_DELAY_IN_MS = 10;
 
 type DimensionsType = {
   width: number;
@@ -167,7 +168,7 @@ export function TeamScore(props: Props) {
       ) {
         setTimeout(() => {
           adjustNameFontSize();
-        }, 50); // Allow time for content to render before adjusting font size.
+        }, RENDER_DELAY_IN_MS); // Allow time for content to render before adjusting font size.
         return;
       }
 
@@ -193,7 +194,7 @@ export function TeamScore(props: Props) {
 
     setTimeout(() => {
       adjustNameFontSize();
-    }, 50); // Allow time for content to render before adjusting font size.
+    }, RENDER_DELAY_IN_MS); // Allow time for content to render before adjusting font size.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.name, props.nameFontSize]);
 
