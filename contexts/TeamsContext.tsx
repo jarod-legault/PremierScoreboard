@@ -8,10 +8,12 @@ export const INITIAL_HOME_NAME = 'Vikings';
 export const INITIAL_HOME_SCORE = 0;
 export const INITIAL_HOME_BACKGROUND_COLOR = 'hsl(270 100% 33%)';
 export const INITIAL_HOME_TEXT_COLOR = 'hsl(60 80% 50%)';
+export const INITIAL_HOME_NAME_FONT_SIZE = 20;
 export const INITIAL_VISITOR_NAME = 'Jets';
 export const INITIAL_VISITOR_SCORE = 0;
 export const INITIAL_VISITOR_BACKGROUND_COLOR = 'hsl(90 100% 17%)';
 export const INITIAL_VISITOR_TEXT_COLOR = 'hsl(0 0% 100%)';
+export const INITIAL_VISITOR_NAME_FONT_SIZE = 20;
 
 type TeamsProviderProps = {children: React.ReactNode};
 export type Value = {
@@ -19,6 +21,8 @@ export type Value = {
   setHomeIsOnLeft: (newValue: boolean) => void;
   homeName: string;
   setHomeName: (newName: string) => void;
+  homeNameFontSize: number;
+  setHomeNameFontSize: (newFontSize: number) => void;
   homeScore: number;
   decrementHomeScore: (pointValue?: number) => void;
   incrementHomeScore: (pointValue?: number) => void;
@@ -29,6 +33,8 @@ export type Value = {
   setHomeTextColor: (newColor: string) => void;
   visitorName: string;
   setVisitorName: (newName: string) => void;
+  visitorNameFontSize: number;
+  setVisitorNameFontSize: (newFontSize: number) => void;
   visitorScore: number;
   decrementVisitorScore: (pointValue?: number) => void;
   incrementVisitorScore: (pointValue?: number) => void;
@@ -53,6 +59,11 @@ function TeamsProvider({children}: TeamsProviderProps) {
     usePersistentState<number>(INITIAL_HOME_SCORE, StorageKeys.HOME_SCORE);
   const [homeName, setHomeName, homeNameIsInitialized] =
     usePersistentState<string>(INITIAL_HOME_NAME, StorageKeys.HOME_NAME);
+  const [homeNameFontSize, setHomeNameFontSize, homeNameFontSizeIsInitialized] =
+    usePersistentState<number>(
+      INITIAL_HOME_NAME_FONT_SIZE,
+      StorageKeys.HOME_NAME_FONT_SIZE,
+    );
   const [
     homeBackgroundColor,
     setHomeBackgroundColor,
@@ -74,6 +85,14 @@ function TeamsProvider({children}: TeamsProviderProps) {
     );
   const [visitorName, setVisitorName, visitorNameIsInitialized] =
     usePersistentState<string>(INITIAL_VISITOR_NAME, StorageKeys.VISITOR_NAME);
+  const [
+    visitorNameFontSize,
+    setVisitorNameFontSize,
+    visitorNameFontSizeIsInitialized,
+  ] = usePersistentState<number>(
+    INITIAL_VISITOR_NAME_FONT_SIZE,
+    StorageKeys.VISITOR_NAME_FONT_SIZE,
+  );
   const [
     visitorBackgroundColor,
     setVisitorBackgroundColor,
@@ -115,6 +134,8 @@ function TeamsProvider({children}: TeamsProviderProps) {
     setHomeIsOnLeft,
     homeName,
     setHomeName,
+    homeNameFontSize,
+    setHomeNameFontSize,
     homeScore,
     decrementHomeScore,
     incrementHomeScore,
@@ -125,6 +146,8 @@ function TeamsProvider({children}: TeamsProviderProps) {
     setHomeTextColor,
     visitorName,
     setVisitorName,
+    visitorNameFontSize,
+    setVisitorNameFontSize,
     visitorScore,
     visitorBackgroundColor,
     setVisitorBackgroundColor,
@@ -140,10 +163,12 @@ function TeamsProvider({children}: TeamsProviderProps) {
     setIsInitialized(
       homeIsOnLeftIsInitialized &&
         homeNameIsInitialized &&
+        homeNameFontSizeIsInitialized &&
         homeScoreIsInitialized &&
         homeBackgroundColorIsInitialized &&
         homeTextColorIsInitialized &&
         visitorNameIsInitialized &&
+        visitorNameFontSizeIsInitialized &&
         visitorScoreIsInitialized &&
         visitorBackgroundColorIsInitialized &&
         visitorTextColorIsInitialized,
@@ -152,10 +177,12 @@ function TeamsProvider({children}: TeamsProviderProps) {
     homeBackgroundColorIsInitialized,
     homeIsOnLeftIsInitialized,
     homeNameIsInitialized,
+    homeNameFontSizeIsInitialized,
     homeScoreIsInitialized,
     homeTextColorIsInitialized,
     visitorBackgroundColorIsInitialized,
     visitorNameIsInitialized,
+    visitorNameFontSizeIsInitialized,
     visitorScoreIsInitialized,
     visitorTextColorIsInitialized,
   ]);

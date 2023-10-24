@@ -14,12 +14,22 @@ import {useAppContext} from '../contexts/AppContext';
 import {useFirstRenderIsComplete} from '../hooks/useFirstRenderIsComplete';
 
 const ROTATE_DURATION_90_DEGREES = 130;
+const NAME_WIDTH_RATIO_UPPER_LIMIT = 0.72;
+const NAME_WIDTH_RATIO_LOWER_LIMIT = 0.62;
+const NAME_HEIGHT_RATIO_UPPER_LIMIT = 0.83;
+const NAME_HEIGHT_RATIO_LOWER_LIMIT = 0.73;
+
+type DimensionsType = {
+  width: number;
+  height: number;
+};
 
 interface Props extends ViewProps {
   backgroundColor?: string;
   containerStyle?: object;
   textColor?: string;
   name: string;
+  nameFontSize: number;
   score: number;
   translateX: number;
   onIncrement: () => void;
@@ -27,6 +37,8 @@ interface Props extends ViewProps {
   onPressName: () => void;
   onLongPressTop: () => void;
   onLongPressBottom: () => void;
+  onIncreaseNameFontSize: () => void;
+  onDecreaseNameFontSize: () => void;
 }
 
 export function TeamScore(props: Props) {
@@ -36,6 +48,9 @@ export function TeamScore(props: Props) {
   const {touchIsEnabled, setTouchIsEnabled} = useAppContext();
 
   const nameRef = useRef<Text>(null);
+  const nameAreaDimensionsRef = useRef<DimensionsType>();
+  const nameContainerDimensionsRef = useRef<DimensionsType>();
+  const nameTextDimensionsRef = useRef<DimensionsType>();
   const scoreRef = useRef<Text>(null);
 
   const {firstRenderIsComplete} = useFirstRenderIsComplete();
@@ -143,6 +158,45 @@ export function TeamScore(props: Props) {
     touchIsEnabled && props.onDecrement();
   }
 
+  useEffect(() => {
+    function adjustNameFontSize() {
+      if (
+        !nameAreaDimensionsRef.current ||
+        !nameContainerDimensionsRef.current ||
+        !nameTextDimensionsRef.current
+      ) {
+        setTimeout(() => {
+          adjustNameFontSize();
+        }, 50); // Allow time for content to render before adjusting font size.
+        return;
+      }
+
+      const nameTextWidth = nameTextDimensionsRef.current.width;
+      const nameTextHeight = nameTextDimensionsRef.current.height;
+      const nameContainerHeight = nameContainerDimensionsRef.current.height;
+      const nameAreaWidth = nameAreaDimensionsRef.current.width;
+
+      if (
+        nameTextHeight >
+        nameContainerHeight * NAME_HEIGHT_RATIO_UPPER_LIMIT
+      ) {
+        props.onDecreaseNameFontSize();
+      } else if (nameTextWidth > nameAreaWidth * NAME_WIDTH_RATIO_UPPER_LIMIT) {
+        props.onDecreaseNameFontSize();
+      } else if (
+        nameTextHeight < nameContainerHeight * NAME_HEIGHT_RATIO_LOWER_LIMIT &&
+        nameTextWidth < nameAreaWidth * NAME_WIDTH_RATIO_LOWER_LIMIT
+      ) {
+        props.onIncreaseNameFontSize();
+      }
+    }
+
+    setTimeout(() => {
+      adjustNameFontSize();
+    }, 50); // Allow time for content to render before adjusting font size.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.name, props.nameFontSize]);
+
   let scoreFontSize: number;
   if (props.score < 100) {
     scoreFontSize = scoreContainerWidth / 1.7;
@@ -156,10 +210,23 @@ export function TeamScore(props: Props) {
         ...styles.container,
         transform: [{translateX}],
       }}>
-      <View style={styles.nameArea}>
+      <View
+        onLayout={(event: LayoutChangeEvent) => {
+          nameAreaDimensionsRef.current = {
+            width: event.nativeEvent.layout.width,
+            height: event.nativeEvent.layout.height,
+          };
+        }}
+        style={styles.nameArea}>
         <Pressable
           ref={nameRef}
           onPress={props.onPressName}
+          onLayout={(event: LayoutChangeEvent) => {
+            nameContainerDimensionsRef.current = {
+              width: event.nativeEvent.layout.width,
+              height: event.nativeEvent.layout.height,
+            };
+          }}
           style={[
             styles.nameContainer,
             {
@@ -168,11 +235,18 @@ export function TeamScore(props: Props) {
             },
           ]}>
           <Text
+            onLayout={(event: LayoutChangeEvent) => {
+              nameTextDimensionsRef.current = {
+                width: event.nativeEvent.layout.width,
+                height: event.nativeEvent.layout.height,
+              };
+            }}
+            numberOfLines={1}
             style={{
               ...styles.name,
+              fontSize: props.nameFontSize,
               color: props.textColor,
-            }}
-            adjustsFontSizeToFit>
+            }}>
             {props.name}
           </Text>
         </Pressable>
@@ -235,6 +309,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0)',
   },
   nameArea: {
+    alignSelf: 'stretch',
     height: '20%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -249,7 +324,6 @@ const styles = StyleSheet.create({
     borderWidth: 5,
   },
   name: {
-    fontSize: 100,
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     includeFontPadding: false,
     textAlignVertical: 'center',

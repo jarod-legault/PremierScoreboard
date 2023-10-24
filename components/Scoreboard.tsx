@@ -24,12 +24,16 @@ export function Scoreboard() {
   const {
     homeIsOnLeft,
     homeName,
+    homeNameFontSize,
+    setHomeNameFontSize,
     homeScore,
     incrementHomeScore,
     decrementHomeScore,
     homeBackgroundColor,
     homeTextColor,
     visitorName,
+    visitorNameFontSize,
+    setVisitorNameFontSize,
     visitorScore,
     incrementVisitorScore,
     decrementVisitorScore,
@@ -69,6 +73,38 @@ export function Scoreboard() {
     setPointsModalIsVisible(false);
   }
 
+  function increaseHomeNameFontSize() {
+    const newHomeNameFontSize = Math.max(
+      Math.min(homeNameFontSize + 1, 100),
+      1,
+    );
+    setHomeNameFontSize(newHomeNameFontSize);
+  }
+
+  function decreaseHomeNameFontSize() {
+    const newHomeNameFontSize = Math.max(
+      Math.min(homeNameFontSize - 1, 100),
+      1,
+    );
+    setHomeNameFontSize(newHomeNameFontSize);
+  }
+
+  function increaseVisitorNameFontSize() {
+    const newVisitorNameFontSize = Math.max(
+      Math.min(visitorNameFontSize + 1, 100),
+      1,
+    );
+    setVisitorNameFontSize(newVisitorNameFontSize);
+  }
+
+  function decreaseVisitorNameFontSize() {
+    const newVisitorNameFontSize = Math.max(
+      Math.min(visitorNameFontSize - 1, 100),
+      1,
+    );
+    setVisitorNameFontSize(newVisitorNameFontSize);
+  }
+
   let homeTranslateX = 0;
   let visitorTranslateX = 0;
   if (safeAreaWidth) {
@@ -96,6 +132,9 @@ export function Scoreboard() {
                 backgroundColor={homeBackgroundColor}
                 textColor={homeTextColor}
                 name={homeName}
+                nameFontSize={homeNameFontSize}
+                onIncreaseNameFontSize={increaseHomeNameFontSize}
+                onDecreaseNameFontSize={decreaseHomeNameFontSize}
                 score={homeScore}
                 translateX={homeTranslateX}
                 onIncrement={incrementHomeScore}
@@ -108,6 +147,9 @@ export function Scoreboard() {
                 backgroundColor={visitorBackgroundColor}
                 textColor={visitorTextColor}
                 name={visitorName}
+                nameFontSize={visitorNameFontSize}
+                onIncreaseNameFontSize={increaseVisitorNameFontSize}
+                onDecreaseNameFontSize={decreaseVisitorNameFontSize}
                 score={visitorScore}
                 translateX={visitorTranslateX}
                 onIncrement={incrementVisitorScore}
