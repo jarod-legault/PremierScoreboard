@@ -14,8 +14,8 @@ import {useAppContext} from '../contexts/AppContext';
 import {useFirstRenderIsComplete} from '../hooks/useFirstRenderIsComplete';
 
 const ROTATE_DURATION_90_DEGREES = 130;
-const NAME_WIDTH_RATIO_UPPER_LIMIT = 0.72;
-const NAME_WIDTH_RATIO_LOWER_LIMIT = 0.62;
+const NAME_WIDTH_RATIO_UPPER_LIMIT = 0.7;
+const NAME_WIDTH_RATIO_LOWER_LIMIT = 0.6;
 const NAME_HEIGHT_RATIO_UPPER_LIMIT = 0.83;
 const NAME_HEIGHT_RATIO_LOWER_LIMIT = 0.73;
 const RENDER_DELAY_IN_MS = 10;
