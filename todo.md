@@ -6,6 +6,6 @@
   - [x] Android
   - [ ] iOS
 - [x] Publish to Google Play
-- [ ] Get app working on iOS
+- [x] Get app working on iOS
 - [ ] Upgrade packages to deal with dependabot alerts: https://github.com/jarod-legault/PremierScoreboard/security/dependabot
 - [ ] Publish to Apple
