@@ -1,10 +1,10 @@
 - [x] Finish custom Text component and bullet list
 - [x] Make app look good in dark mode.
 - [x] Get font size adjusting properly.
-- [ ] Update version number
+- [x] Update version number
   - [x] package.json
   - [x] Android
-  - [ ] iOS
+  - [x] iOS
 - [x] Publish to Google Play
 - [x] Get app working on iOS
 - [ ] Upgrade packages to deal with dependabot alerts: https://github.com/jarod-legault/PremierScoreboard/security/dependabot
