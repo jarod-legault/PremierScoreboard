@@ -1,11 +1,13 @@
 import React, {useRef, useState} from 'react';
 import {Modal, ModalProps, Platform, StyleSheet, View} from 'react-native';
-import {Button, IconButton, Text, TextInput} from 'react-native-paper';
+import {Button, IconButton, TextInput} from 'react-native-paper';
+import {Text} from './Text';
 import {useTeamsContext} from '../contexts/TeamsContext';
 import {ColorPicker} from './ColorPicker';
 import {ColorPickerButton} from './ColorPickerButton';
 import {Confirmation} from './Confirmation';
 import {Tips} from './Tips';
+import colors from '../Colors';
 
 const DEFAULT_FONT_SIZE = 18;
 
@@ -144,6 +146,7 @@ export function SettingsModal(props: Props) {
             <IconButton
               icon="swap-horizontal-circle-outline"
               size={40}
+              iconColor={colors.text}
               style={styles.swapButton}
               onPress={swapSides}
             />
@@ -193,18 +196,21 @@ export function SettingsModal(props: Props) {
           <View style={styles.bottomContainer}>
             <Button
               mode="elevated"
+              buttonColor={colors.logoBlue}
               onPress={() => setResetConfirmationIsVisible(true)}>
               <Text style={styles.resetButtonText}>Reset scores</Text>
             </Button>
           </View>
           <IconButton
             style={styles.tipsButton}
+            iconColor={colors.text}
             size={30}
             icon="help-box"
             onPress={showTips}
           />
           <IconButton
             style={styles.closeButton}
+            iconColor={colors.text}
             size={30}
             icon="close-box"
             onPress={onRequestCloseModal}
@@ -271,6 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   resetButtonText: {
+    color: 'white',
     fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     fontSize: DEFAULT_FONT_SIZE,
   },

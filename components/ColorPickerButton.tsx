@@ -1,6 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Surface, Text} from 'react-native-paper';
+import {Surface} from 'react-native-paper';
+import {Text} from './Text';
 
 type Props = {
   label: string;

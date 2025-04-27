@@ -1,3 +1,3 @@
-- [ ] Finish custom Text component and bullet list
-- [ ] Make app look good in dark mode.
+- [x] Finish custom Text component and bullet list
+- [x] Make app look good in dark mode.
 - [ ] Get font size adjusting properly.

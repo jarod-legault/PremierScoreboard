@@ -1,6 +1,7 @@
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
-import {IconButton, Surface, Text} from 'react-native-paper';
+import {IconButton, Surface} from 'react-native-paper';
+import {Text, TEXT_COLOR} from './Text';
 import {BulletPoint} from './BulletPoint';
 
 type Props = {
@@ -21,6 +22,7 @@ export function Tips(props: Props) {
           style={styles.closeButton}
           size={30}
           icon="close-box"
+          iconColor={TEXT_COLOR}
           onPress={props.onRequestClose}
         />
       </Surface>

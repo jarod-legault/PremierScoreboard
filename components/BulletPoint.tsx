@@ -1,6 +1,6 @@
 import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Text} from './Text';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   text: {
-    fontFamily: Platform.OS === 'ios' ? 'Arvo' : 'Arvo-Regular',
     fontSize: 18,
     flexShrink: 1,
     marginHorizontal: 6,
