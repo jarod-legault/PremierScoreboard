@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Button, IconButton, Surface} from 'react-native-paper';
 import {ColorTranslator, HSLObject} from 'colortranslator';
+import Colors from '../Colors';
 
 const MIN_COLOR_WIDTH = 30;
 const NUMBER_OF_HUES = 12;
@@ -281,6 +282,7 @@ export function ColorPicker(props: Props) {
         </View>
         <IconButton
           style={styles.closeButton}
+          iconColor={Colors.text}
           size={30}
           icon="close-box"
           onPress={props.onColorReject}
