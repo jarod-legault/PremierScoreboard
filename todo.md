@@ -1,7 +1,10 @@
 - [x] Finish custom Text component and bullet list
 - [x] Make app look good in dark mode.
 - [x] Get font size adjusting properly.
-- [ ] Update version number?
+- [ ] Update version number
+  - [x] package.json
+  - [x] Android
+  - [ ] iOS
 - [ ] Publish to Google Play
 - [ ] Get app working on iOS
 - [ ] Publish to Apple
