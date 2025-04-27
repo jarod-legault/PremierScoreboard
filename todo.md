@@ -7,5 +7,5 @@
   - [x] iOS
 - [x] Publish to Google Play
 - [x] Get app working on iOS
-- [ ] Upgrade packages to deal with dependabot alerts: https://github.com/jarod-legault/PremierScoreboard/security/dependabot
 - [ ] Publish to Apple
+- [ ] Switch to Expo and upgrade packages.
