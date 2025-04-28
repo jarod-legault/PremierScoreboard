@@ -7,5 +7,5 @@
   - [x] iOS
 - [x] Publish to Google Play
 - [x] Get app working on iOS
-- [ ] Publish to Apple
+- [x] Publish to Apple
 - [ ] Switch to Expo and upgrade packages.
